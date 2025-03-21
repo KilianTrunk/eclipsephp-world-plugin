@@ -19,12 +19,14 @@
     },
     "autoload": {
         "psr-4": {
-            "Eclipse\\PluginTemplate\\": "src/"
+            "Eclipse\\World\\": "src/",
+            "Eclipse\\World\\Factories\\": "database/factories/",
+            "Eclipse\\World\\Seeders\\": "database/seeders/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Eclipse\\PluginTemplate\\Tests\\": "tests/"
+            "Tests\\": "tests/"
         }
     }
 }

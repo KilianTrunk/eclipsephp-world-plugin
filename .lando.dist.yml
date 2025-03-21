@@ -1,4 +1,4 @@
-name: eclipsephp-plugin-template
+name: eclipse-world
 services:
   appserver:
     type: php:custom

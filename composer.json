@@ -1,12 +1,12 @@
 {
-    "name": "eclipsephp/plugin-template",
-    "description": "Eclipse template for Filament plugins",
+    "name": "eclipsephp/world-plugin",
+    "description": "Filament plugin for world data",
     "keywords": [
         "eclipse",
         "filament",
         "laravel"
     ],
-    "homepage": "https://github.com/DataLinx/eclipsephp-plugin-template",
+    "homepage": "https://github.com/DataLinx/eclipsephp-world",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -26,9 +26,9 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Eclipse\\PluginTemplate\\": "src/",
-            "Eclipse\\PluginTemplate\\Factories\\": "database/factories/",
-            "Eclipse\\PluginTemplate\\Seeders\\": "database/seeders/"
+            "Eclipse\\World\\": "src/",
+            "Eclipse\\World\\Factories\\": "database/factories/",
+            "Eclipse\\World\\Seeders\\": "database/seeders/"
         }
     },
     "autoload-dev": {
@@ -56,7 +56,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Eclipse\\PluginTemplate\\PluginTemplateServiceProvider"
+                "Eclipse\\World\\EclipseWorldServiceProvider"
             ]
         }
     }

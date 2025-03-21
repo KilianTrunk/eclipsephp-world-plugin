@@ -1,15 +1,15 @@
 <?php
 
-namespace Eclipse\PluginTemplate;
+namespace Eclipse\World;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 
-class PluginTemplate implements Plugin
+class EclipseWorld implements Plugin
 {
     public function getId(): string
     {
-        return 'plugin-template';
+        return 'eclipse-world';
     }
 
     public function register(Panel $panel): void

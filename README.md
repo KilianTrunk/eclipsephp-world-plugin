@@ -1,19 +1,15 @@
-# Eclipse Filament plugin template
+# Eclipse World plugin for Filament
 
-![Packagist PHP Version Support](https://img.shields.io/packagist/php-v/eclipsephp/plugin-template)
-![Packagist Version](https://img.shields.io/packagist/v/eclipsephp/plugin-template)
-![Packagist Downloads](https://img.shields.io/packagist/dt/eclipsephp/plugin-template)
-[![Tests](https://github.com/DataLinx/eclipsephp-plugin-template/actions/workflows/test-runner.yml/badge.svg)](https://github.com/DataLinx/eclipsephp-plugin-template/actions/workflows/test-runner.yml)
-[![codecov](https://codecov.io/gh/DataLinx/eclipsephp-plugin-template/graph/badge.svg?token=1HKSY5O6IW)](https://codecov.io/gh/DataLinx/eclipsephp-plugin-template)
+![Packagist PHP Version Support](https://img.shields.io/packagist/php-v/eclipsephp/world-plugin)
+![Packagist Version](https://img.shields.io/packagist/v/eclipsephp/world-plugin)
+![Packagist Downloads](https://img.shields.io/packagist/dt/eclipsephp/world-plugin)
+[![Tests](https://github.com/DataLinx/eclipsephp-world-plugin/actions/workflows/test-runner.yml/badge.svg)](https://github.com/DataLinx/eclipsephp-world-plugin/actions/workflows/test-runner.yml)
+[![codecov](https://codecov.io/gh/DataLinx/eclipsephp-world-plugin/graph/badge.svg?token=1HKSY5O6IW)](https://codecov.io/gh/DataLinx/eclipsephp-world-plugin)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)
-![Packagist License](https://img.shields.io/packagist/l/eclipsephp/plugin-template)
+![Packagist License](https://img.shields.io/packagist/l/eclipsephp/world-plugin)
 
 ## About
-This package serves as a Filament plugin template for plugins developed by DataLinx for [Eclipse](https://github.com/DataLinx/eclipsephp-app), our web app based on Filament. It is also a reference of how such a package should be configured.
 
-The template is opinionated — it's based on our tech stack, which includes JetBrains PhpStorm.
-
-This template works on and expands our [PHP package template](https://github.com/DataLinx/php-package-template).
 
 ## Requirements
 - PHP >= 8.2 (due to Pest 3 requirement)
@@ -21,7 +17,7 @@ This template works on and expands our [PHP package template](https://github.com
 ## Getting started
 * Download it with composer:
 ```shell
-  composer require eclipsephp/plugin-template
+  composer require eclipsephp/world-plugin
 ````
 * _Provide a simple example how to use the package._
 
