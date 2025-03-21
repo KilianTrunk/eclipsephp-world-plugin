@@ -1,0 +1,63 @@
+{
+    "name": "eclipsephp/plugin-template",
+    "description": "Eclipse template for Filament plugins",
+    "keywords": [
+        "eclipse",
+        "filament",
+        "laravel"
+    ],
+    "homepage": "https://github.com/DataLinx/eclipsephp-plugin-template",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "DataLinx",
+            "email": "info@datalinx.si"
+        }
+    ],
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Eclipse\\PluginTemplate\\": "src/",
+            "Eclipse\\PluginTemplate\\Factories\\": "database/factories/",
+            "Eclipse\\PluginTemplate\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "datalinx/php-utils": "^2.5",
+        "filament/filament": "^3.3",
+        "spatie/laravel-package-tools": "^1.19"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.21",
+        "orchestra/testbench": "^10.1",
+        "pestphp/pest": "^3.7",
+        "pestphp/pest-plugin-livewire": "^3.0"
+    },
+    "scripts": {
+        "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
+        "format": "vendor/bin/pint",
+        "test": "vendor/bin/testbench package:test"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Eclipse\\PluginTemplate\\PluginTemplateServiceProvider"
+            ]
+        }
+    }
+}
