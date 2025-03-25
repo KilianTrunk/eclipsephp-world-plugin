@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
 /*
@@ -13,7 +14,18 @@ use Tests\TestCase;
 |
 */
 
-uses(TestCase::class)->in(__DIR__);
+uses(TestCase::class)
+    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->beforeEach(function () {
+        // Seed roles and permissions with Filament Shield plugin
+        Artisan::call('shield:generate', [
+            '--all' => null,
+            '--panel' => 'admin',
+            '--option' => 'permissions',
+            '--minimal' => null,
+        ]);
+    })
+    ->in(__DIR__);
 
 /*
 |--------------------------------------------------------------------------
@@ -26,9 +38,9 @@ uses(TestCase::class)->in(__DIR__);
 |
 */
 
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
-});
+// expect()->extend('toBeOne', function () {
+//    return $this->toBe(1);
+// });
 
 /*
 |--------------------------------------------------------------------------
