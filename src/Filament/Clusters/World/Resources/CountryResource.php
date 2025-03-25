@@ -3,8 +3,8 @@
 namespace Eclipse\World\Filament\Clusters\World\Resources;
 
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
-use Eclipse\World\Filament\Clusters\World\Resources\CountryResource\Pages;
 use Eclipse\World\Filament\Clusters\World;
+use Eclipse\World\Filament\Clusters\World\Resources\CountryResource\Pages;
 use Eclipse\World\Models\Country;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -55,9 +55,9 @@ class CountryResource extends Resource implements HasShieldPermissions
                         if (class_exists('\TangoDevIt\FilamentEmojiPicker\EmojiPickerAction')) {
                             return \TangoDevIt\FilamentEmojiPicker\EmojiPickerAction::make('emoji-flag');
                         }
+
                         return null;
-                    })
-                ,
+                    }),
 
                 TextInput::make('a3_id')
                     ->required()

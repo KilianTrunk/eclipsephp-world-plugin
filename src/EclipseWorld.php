@@ -14,7 +14,7 @@ class EclipseWorld implements Plugin
 
     public function register(Panel $panel): void
     {
-        $panel->discoverClusters(__DIR__ .'/Filament/Clusters', 'Eclipse\\World\\Filament\\Clusters');
+        $panel->discoverClusters(__DIR__.'/Filament/Clusters', 'Eclipse\\World\\Filament\\Clusters');
     }
 
     public function boot(Panel $panel): void
