@@ -2,6 +2,7 @@
 
 namespace Eclipse\World;
 
+use Eclipse\World\Console\Commands\ImportCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -13,6 +14,11 @@ class EclipseWorldServiceProvider extends PackageServiceProvider
     {
         $package->name(static::$name)
             ->hasConfigFile()
-            ->hasTranslations();
+            ->hasTranslations()
+            ->hasCommands([
+                ImportCommand::class,
+            ])
+            ->discoversMigrations()
+            ->runsMigrations();
     }
 }

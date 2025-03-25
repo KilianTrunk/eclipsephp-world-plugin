@@ -38,6 +38,7 @@
     },
     "require": {
         "php": "^8.2",
+        "bezhansalleh/filament-shield": "^3.3",
         "datalinx/php-utils": "^2.5",
         "filament/filament": "^3.3",
         "spatie/laravel-package-tools": "^1.19"
@@ -59,5 +60,8 @@
                 "Eclipse\\World\\EclipseWorldServiceProvider"
             ]
         }
+    },
+    "suggest": {
+        "tangodev-it/filament-emoji-picker": "Show a emoji picker for country flag input"
     }
 }
