@@ -63,6 +63,9 @@ jobs:
       - name: Install dependencies
         run: composer update --prefer-dist --no-progress --${{ matrix.dependency-version }}
 
+      - name: Setup for testing
+        run: composer setup
+
       - name: Run test suite
         run: composer test -- --coverage-clover ./coverage.xml
 

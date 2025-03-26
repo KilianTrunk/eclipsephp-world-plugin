@@ -57,6 +57,7 @@
             "@clear",
             "@prepare"
         ],
+        "post-install-cmd": "@setup",
         "format": "vendor/bin/pint",
         "test": "vendor/bin/testbench package:test",
         "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
@@ -66,6 +67,10 @@
             "Composer\\Config::disableProcessTimeout",
             "@build",
             "@php vendor/bin/testbench serve --ansi"
+        ],
+        "setup": [
+            "@php vendor/bin/testbench vendor:publish --provider='Spatie\\Permission\\PermissionServiceProvider'",
+            "@php vendor/bin/testbench vendor:publish --tag='filament-shield-config'"
         ]
     },
     "extra": {
