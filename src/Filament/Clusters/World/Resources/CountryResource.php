@@ -42,15 +42,15 @@ class CountryResource extends Resource implements HasShieldPermissions
                     ->required()
                     ->length(2)
                     ->unique(table: Country::class, ignoreRecord: true)
-                    ->label('ID')
-                    ->helperText('ISO-3166 Alpha-2 code'),
+                    ->label(__('eclipse-world::countries.form.id.label'))
+                    ->helperText(__('eclipse-world::countries.form.id.helper')),
 
                 TextInput::make('name')
-                    ->label('Country name')
+                    ->label(__('eclipse-world::countries.form.name.label'))
                     ->required(),
 
                 TextInput::make('flag')
-                    ->label('Flag')
+                    ->label(__('eclipse-world::countries.form.flag.label'))
                     ->suffixAction(function () {
                         if (class_exists('\TangoDevIt\FilamentEmojiPicker\EmojiPickerAction')) {
                             return \TangoDevIt\FilamentEmojiPicker\EmojiPickerAction::make('emoji-flag');
@@ -62,13 +62,14 @@ class CountryResource extends Resource implements HasShieldPermissions
                 TextInput::make('a3_id')
                     ->required()
                     ->length(3)
-                    ->label('Alpha-3 ID')
-                    ->helperText('ISO-3166 Alpha-3 code'),
+                    ->label(__('eclipse-world::countries.form.alpha3_id.label'))
+                    ->helperText(__('eclipse-world::countries.form.alpha3_id.helper')),
 
                 TextInput::make('num_code')
                     ->numeric()
                     ->length(3)
-                    ->label('ISO-3166 numeric code'),
+                    ->label(__('eclipse-world::countries.form.num_code.label'))
+                    ->helperText(__('eclipse-world::countries.form.num_code.helper')),
             ]);
     }
 
@@ -80,28 +81,28 @@ class CountryResource extends Resource implements HasShieldPermissions
             ->striped()
             ->columns([
                 TextColumn::make('id')
-                    ->label('ID')
+                    ->label(__('eclipse-world::countries.table.id.label'))
                     ->searchable()
                     ->sortable()
                     ->width(100),
 
                 TextColumn::make('name')
-                    ->label('Country name')
+                    ->label(__('eclipse-world::countries.table.name.label'))
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('flag')
-                    ->label('Flag')
+                    ->label(__('eclipse-world::countries.table.flag.label'))
                     ->width(100),
 
                 TextColumn::make('a3_id')
-                    ->label('Alpha-3 ID')
+                    ->label(__('eclipse-world::countries.table.alpha3_id.label'))
                     ->searchable()
                     ->sortable()
                     ->width(100),
 
                 TextColumn::make('num_code')
-                    ->label('Num. code')
+                    ->label(__('eclipse-world::countries.table.num_code.label'))
                     ->searchable()
                     ->sortable()
                     ->width(100),
@@ -110,18 +111,32 @@ class CountryResource extends Resource implements HasShieldPermissions
                 TrashedFilter::make(),
             ])
             ->actions([
-                EditAction::make(),
+                EditAction::make()
+                    ->label(__('eclipse-world::countries.actions.edit.label'))
+                    ->modalHeading(__('eclipse-world::countries.actions.edit.heading')),
                 ActionGroup::make([
-                    DeleteAction::make(),
-                    RestoreAction::make(),
-                    ForceDeleteAction::make(),
+                    DeleteAction::make()
+                        ->label(__('eclipse-world::countries.actions.delete.label'))
+                        ->modalHeading(__('eclipse-world::countries.actions.delete.heading')),
+                    RestoreAction::make()
+                        ->label(__('eclipse-world::countries.actions.restore.label'))
+                        ->modalHeading(__('eclipse-world::countries.actions.restore.heading')),
+                    ForceDeleteAction::make()
+                        ->label(__('eclipse-world::countries.actions.force_delete.label'))
+                        ->modalHeading(__('eclipse-world::countries.actions.force_delete.heading'))
+                        ->modalDescription(fn (Country $record): string => __('eclipse-world::countries.actions.force_delete.description', [
+                            'name' => $record->name,
+                        ])),
                 ]),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                    RestoreBulkAction::make(),
-                    ForceDeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->label(__('eclipse-world::countries.actions.delete.label')),
+                    RestoreBulkAction::make()
+                        ->label(__('eclipse-world::countries.actions.restore.label')),
+                    ForceDeleteBulkAction::make()
+                        ->label(__('eclipse-world::countries.actions.force_delete.label')),
                 ]),
             ]);
     }
@@ -154,5 +169,20 @@ class CountryResource extends Resource implements HasShieldPermissions
             'force_delete',
             'force_delete_any',
         ];
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('eclipse-world::countries.nav_label');
+    }
+
+    public static function getBreadcrumb(): string
+    {
+        return __('eclipse-world::countries.breadcrumb');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('eclipse-world::countries.plural');
     }
 }
