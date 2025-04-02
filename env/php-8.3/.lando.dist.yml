@@ -24,3 +24,7 @@ tooling:
     service: appserver
     description: Run tests
     cmd: "composer run-script test"
+  testbench:
+    service: appserver
+    description: Run testbench CLI
+    cmd: "vendor/bin/testbench"
