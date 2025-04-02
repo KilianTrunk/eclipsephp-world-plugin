@@ -58,6 +58,7 @@
             "@prepare"
         ],
         "post-install-cmd": "@setup",
+        "post-update-cmd": "@setup",
         "format": "vendor/bin/pint",
         "test": "vendor/bin/testbench package:test",
         "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
@@ -70,7 +71,8 @@
         ],
         "setup": [
             "@php vendor/bin/testbench vendor:publish --provider='Spatie\\Permission\\PermissionServiceProvider'",
-            "@php vendor/bin/testbench vendor:publish --tag='filament-shield-config'"
+            "@php vendor/bin/testbench vendor:publish --tag='filament-shield-config'",
+            "@php vendor/bin/testbench package:sync-skeleton"
         ]
     },
     "extra": {
