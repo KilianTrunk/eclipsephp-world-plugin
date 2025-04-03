@@ -13,7 +13,11 @@ class ImportCommand extends Command
 
     public function handle(): void
     {
+        $this->info('Import command started');
+
         // Run ImportCountries job
         ImportCountries::dispatchSync();
+
+        $this->info('Import command ran successfully');
     }
 }

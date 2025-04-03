@@ -16,7 +16,7 @@ class ImportCountries implements ShouldQueue
     public function handle(): void
     {
         // Load existing countries into an associative array
-        $existingCountries = Country::all()->keyBy('id');
+        $existingCountries = Country::withTrashed()->get()->keyBy('id');
 
         // Load new country data
         $countries = json_decode(file_get_contents('https://raw.githubusercontent.com/mledoze/countries/master/dist/countries.json'), true);
