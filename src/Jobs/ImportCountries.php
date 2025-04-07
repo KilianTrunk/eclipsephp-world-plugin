@@ -13,6 +13,10 @@ class ImportCountries implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public int $timeout = 60;
+
+    public bool $failOnTimeout = true;
+
     public function handle(): void
     {
         // Load existing countries into an associative array
