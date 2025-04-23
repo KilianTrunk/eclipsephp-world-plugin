@@ -44,11 +44,12 @@
         "bezhansalleh/filament-shield": "^3.3",
         "datalinx/php-utils": "^2.5",
         "filament/filament": "^3.3",
+        "laravel/framework": "^11.0",
         "spatie/laravel-package-tools": "^1.19"
     },
     "require-dev": {
         "laravel/pint": "^1.21",
-        "orchestra/testbench": "^10.1",
+        "orchestra/testbench": "^9.9",
         "pestphp/pest": "^3.7",
         "pestphp/pest-plugin-livewire": "^3.0"
     },
