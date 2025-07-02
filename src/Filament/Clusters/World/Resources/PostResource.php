@@ -23,7 +23,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class PostResource extends Resource  implements HasShieldPermissions
+class PostResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = Post::class;
 
