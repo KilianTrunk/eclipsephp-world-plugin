@@ -76,12 +76,9 @@ class PostResource extends Resource implements HasShieldPermissions
             ->columns([
                 TextColumn::make('country.name')
                     ->label(__('eclipse-world::posts.table.country.label'))
+                    ->formatStateUsing(fn(string $state, Post $record) => trim("{$record->country->flag} {$state}"))
                     ->searchable()
                     ->sortable(),
-
-                TextColumn::make('country.flag')
-                    ->label(__('eclipse-world::posts.table.flag.label'))
-                    ->width(100),
 
                 TextColumn::make('code')
                     ->label(__('eclipse-world::posts.table.code.label')),
@@ -92,12 +89,12 @@ class PostResource extends Resource implements HasShieldPermissions
                     ->sortable(),
             ])
             ->filters([
-                TrashedFilter::make(),
                 SelectFilter::make('country_id')
                     ->label(__('eclipse-world::posts.filter.country.label'))
                     ->relationship('country', 'name')
                     ->searchable()
                     ->preload(),
+                TrashedFilter::make(),
             ])
             ->actions([
                 EditAction::make()
