@@ -12,7 +12,7 @@ class ImportPostsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'eclipse-world:import-posts {country : The country code (SI or HR)}';
+    protected $signature = 'world:import-post {country : The country code (SI or HR)}';
 
     /**
      * The console command description.
