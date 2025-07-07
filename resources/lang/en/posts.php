@@ -9,9 +9,6 @@ return [
         'country' => [
             'label' => 'Country',
         ],
-        'flag' => [
-            'label' => 'Flag',
-        ],
         'code' => [
             'label' => 'Code',
         ],

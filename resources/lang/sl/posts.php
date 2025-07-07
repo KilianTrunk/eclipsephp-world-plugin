@@ -9,9 +9,6 @@ return [
         'country' => [
             'label' => 'Država',
         ],
-        'flag' => [
-            'label' => 'Zastava',
-        ],
         'code' => [
             'label' => 'Šifra',
         ],
