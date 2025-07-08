@@ -68,4 +68,22 @@ return [
             'helper' => 'Numeric code (ISO-3166)',
         ],
     ],
+
+    'import' => [
+        'action_label' => 'Import Countries',
+        'modal_heading' => 'Import Countries',
+        'success_title' => 'Import Countries',
+        'success_message' => 'The import countries job has been queued.',
+    ],
+
+    'notifications' => [
+        'success' => [
+            'title' => 'Countries Import Completed',
+            'message' => 'All countries have been successfully imported and updated.',
+        ],
+        'failed' => [
+            'title' => 'Countries Import Failed',
+            'message' => 'Failed to import countries data.',
+        ],
+    ],
 ];

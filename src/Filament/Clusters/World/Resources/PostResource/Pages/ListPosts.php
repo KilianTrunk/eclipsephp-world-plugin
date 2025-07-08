@@ -9,6 +9,7 @@ use Filament\Actions\CreateAction;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Support\Facades\App;
 
 class ListPosts extends ListRecords
 {
@@ -36,8 +37,8 @@ class ListPosts extends ListRecords
                 ])
                 ->modalHeading(__('eclipse-world::posts.import.modal_heading'))
                 ->action(function (array $data) {
-                    // Dispatch the job with selected country
-                    ImportPosts::dispatch($data['country_id']);
+                    // Dispatch the job
+                    ImportPosts::dispatch($data['country_id'], auth()->id(), App::getLocale());
 
                     // Show notification
                     Notification::make()

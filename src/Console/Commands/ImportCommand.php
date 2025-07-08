@@ -4,6 +4,7 @@ namespace Eclipse\World\Console\Commands;
 
 use Eclipse\World\Jobs\ImportCountries;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\App;
 
 class ImportCommand extends Command
 {
@@ -16,7 +17,7 @@ class ImportCommand extends Command
         $this->info('Import command started');
 
         // Run ImportCountries job
-        ImportCountries::dispatchSync();
+        ImportCountries::dispatchSync(auth()->id(), App::getLocale());
 
         $this->info('Import command ran successfully');
     }

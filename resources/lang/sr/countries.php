@@ -68,4 +68,22 @@ return [
             'helper' => 'Numerička oznaka (ISO-3166)',
         ],
     ],
+
+    'import' => [
+        'action_label' => 'Uvezi države',
+        'modal_heading' => 'Uvoz država',
+        'success_title' => 'Uvoz država',
+        'success_message' => 'Zadatak za uvoz država je dodat u red čekanja.',
+    ],
+
+    'notifications' => [
+        'success' => [
+            'title' => 'Uvoz država završen',
+            'message' => 'Sve države su uspešno uvežene i ažurirane.',
+        ],
+        'failed' => [
+            'title' => 'Uvoz država neuspešan',
+            'message' => 'Neuspešan uvoz podataka država.',
+        ],
+    ],
 ];
