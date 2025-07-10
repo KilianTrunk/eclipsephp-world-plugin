@@ -2,15 +2,15 @@
 
 namespace Eclipse\World\Jobs;
 
-use Eclipse\World\Models\Country;
 use Eclipse\Core\Models\User;
+use Eclipse\World\Models\Country;
+use Eclipse\World\Notifications\ImportFinishedNotification;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Notifications\ImportFinishedNotification;
-use Exception;
 use Illuminate\Support\Facades\Log;
 
 class ImportCountries implements ShouldQueue
@@ -22,7 +22,9 @@ class ImportCountries implements ShouldQueue
     public bool $failOnTimeout = true;
 
     public ?int $userId;
+
     public string $locale;
+
     /**
      * Create a new job instance.
      */
@@ -34,7 +36,7 @@ class ImportCountries implements ShouldQueue
 
     public function handle(): void
     {
-        Log::info("Starting countries import");
+        Log::info('Starting countries import');
 
         $user = $this->userId ? User::find($this->userId) : null;
 
@@ -45,7 +47,7 @@ class ImportCountries implements ShouldQueue
             // Load new country data
             $countries = json_decode(file_get_contents('https://raw.githubusercontent.com/mledoze/countries/master/dist/countries.json'), true);
 
-            if (!$countries) {
+            if (! $countries) {
                 throw new Exception('Failed to fetch or parse countries data');
             }
 
@@ -69,12 +71,12 @@ class ImportCountries implements ShouldQueue
                 }
             }
 
-            Log::info("Countries import completed");
+            Log::info('Countries import completed');
             if ($user) {
                 $user->notify(new ImportFinishedNotification('success', 'countries', null, $this->locale));
             }
         } catch (Exception $e) {
-            Log::error("Countries import failed: " . $e->getMessage());
+            Log::error('Countries import failed: '.$e->getMessage());
             if ($user) {
                 $user->notify(new ImportFinishedNotification('failed', 'countries', null, $this->locale));
             }

@@ -4,7 +4,6 @@ namespace Eclipse\World\Console\Commands;
 
 use Eclipse\World\Jobs\ImportPosts;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\App;
 
 class ImportPostsCommand extends Command
 {
@@ -29,14 +28,15 @@ class ImportPostsCommand extends Command
     {
         $country = strtoupper($this->argument('country'));
 
-        if (!in_array($country, ['SI', 'HR'])) {
+        if (! in_array($country, ['SI', 'HR'])) {
             $this->error('Invalid country code. Only SI and HR are supported.');
+
             return self::FAILURE;
         }
 
         $this->info("Dispatching import job for country: {$country}");
 
-        ImportPosts::dispatch($country, auth()->id(), App::getLocale());
+        ImportPosts::dispatch($country);
 
         $this->info('Import job has been queued successfully!');
         $this->comment('The import will run in the background. Check the logs for progress.');
