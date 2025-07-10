@@ -45,20 +45,16 @@ class ImportFinishedNotification extends Notification implements ShouldQueue
         $body = $this->getBody();
         $icon = $this->status === 'success' ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle';
         $iconColor = $this->status === 'success' ? 'success' : 'danger';
-
-        FilamentNotification::make()
+    
+        $notification = FilamentNotification::make()
             ->title($title)
             ->body($body)
             ->icon($icon)
-            ->iconColor($iconColor)
-            ->broadcast($notifiable);
-
-        return FilamentNotification::make()
-            ->title($title)
-            ->body($body)
-            ->icon($icon)
-            ->iconColor($iconColor)
-            ->getDatabaseMessage();
+            ->iconColor($iconColor);
+    
+        $notification->broadcast($notifiable);
+    
+        return $notification->getDatabaseMessage();
     }
 
     public function toArray(): array
