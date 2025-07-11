@@ -68,4 +68,22 @@ return [
             'helper' => 'Numerična šifra (ISO-3166)',
         ],
     ],
+
+    'import' => [
+        'action_label' => 'Uvozi države',
+        'modal_heading' => 'Uvoz držav',
+        'success_title' => 'Uvoz držav',
+        'success_message' => 'Naloga za uvoz držav je bila dodana v čakalno vrsto.',
+    ],
+
+    'notifications' => [
+        'success' => [
+            'title' => 'Uvoz držav uspešno končan',
+            'message' => 'Vse države so bile uspešno uvožene in posodobljene.',
+        ],
+        'failed' => [
+            'title' => 'Uvoz držav neuspešen',
+            'message' => 'Uvoz podatkov držav ni uspel.',
+        ],
+    ],
 ];

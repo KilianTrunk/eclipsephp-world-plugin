@@ -75,4 +75,15 @@ return [
             'HR' => 'Hrvatska',
         ],
     ],
+
+    'notifications' => [
+        'success' => [
+            'title' => 'Uvoz pošta završen',
+            'message' => 'Poštanski podaci za :country su uspešno uveženi.',
+        ],
+        'failed' => [
+            'title' => 'Uvoz pošta neuspešan',
+            'message' => 'Neuspešan uvoz poštanskih podataka za :country.',
+        ],
+    ],
 ];

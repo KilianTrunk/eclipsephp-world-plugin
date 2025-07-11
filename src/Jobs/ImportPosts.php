@@ -2,7 +2,9 @@
 
 namespace Eclipse\World\Jobs;
 
+use Eclipse\Core\Models\User;
 use Eclipse\World\Models\Post;
+use Eclipse\World\Notifications\ImportFinishedNotification;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,12 +22,18 @@ class ImportPosts implements ShouldQueue
 
     public string $countryId;
 
+    public int $userId;
+
+    public string $locale;
+
     /**
      * Create a new job instance.
      */
-    public function __construct(string $countryId)
+    public function __construct(string $countryId, int $userId, string $locale = 'en')
     {
         $this->countryId = $countryId;
+        $this->userId = $userId;
+        $this->locale = $locale;
     }
 
     /**
@@ -43,37 +51,50 @@ class ImportPosts implements ShouldQueue
 
         Log::info("Starting postal data import for country: {$this->countryId}");
 
-        do {
-            [$totalRecords, $records] = $this->getData($batchSize, $offset);
+        $user = $this->userId ? User::find($this->userId) : null;
 
-            foreach ($records as $record) {
-                [$postalCode, $placeName] = $this->getRecordData($record);
+        try {
+            do {
+                [$totalRecords, $records] = $this->getData($batchSize, $offset);
 
-                if (array_key_exists($postalCode, $processedCodes)) {
-                    continue;
+                foreach ($records as $record) {
+                    [$postalCode, $placeName] = $this->getRecordData($record);
+
+                    if (array_key_exists($postalCode, $processedCodes)) {
+                        continue;
+                    }
+
+                    $processedCodes[$postalCode] = true;
+
+                    $existingPost = Post::where('country_id', $this->countryId)
+                        ->where('code', $postalCode)
+                        ->first();
+
+                    if (empty($existingPost)) {
+                        Post::create([
+                            'country_id' => $this->countryId,
+                            'code' => $postalCode,
+                            'name' => $placeName,
+                        ]);
+                    } elseif ($existingPost->name !== $placeName) {
+                        $existingPost->update(['name' => $placeName]);
+                    }
                 }
 
-                $processedCodes[$postalCode] = true;
+                $offset += $batchSize;
+            } while ($offset < $totalRecords);
 
-                $existingPost = Post::where('country_id', $this->countryId)
-                    ->where('code', $postalCode)
-                    ->first();
-
-                if (empty($existingPost)) {
-                    Post::create([
-                        'country_id' => $this->countryId,
-                        'code' => $postalCode,
-                        'name' => $placeName,
-                    ]);
-                } elseif ($existingPost->name !== $placeName) {
-                    $existingPost->update(['name' => $placeName]);
-                }
+            Log::info("Postal data import completed for {$this->countryId}");
+            if ($user) {
+                $user->notify(new ImportFinishedNotification('success', 'posts', $this->countryId, $this->locale));
             }
-
-            $offset += $batchSize;
-        } while ($offset < $totalRecords);
-
-        Log::info("Postal data import completed for {$this->countryId}");
+        } catch (Exception $e) {
+            Log::error("Postal data import failed for {$this->countryId}: {$e->getMessage()}");
+            if ($user) {
+                $user->notify(new ImportFinishedNotification('failed', 'posts', $this->countryId, $this->locale));
+            }
+            throw $e;
+        }
     }
 
     /**

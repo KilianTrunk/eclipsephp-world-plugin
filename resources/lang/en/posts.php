@@ -75,4 +75,15 @@ return [
             'HR' => 'Croatia',
         ],
     ],
+
+    'notifications' => [
+        'success' => [
+            'title' => 'Posts Import Completed',
+            'message' => 'Postal data for :country has been successfully imported.',
+        ],
+        'failed' => [
+            'title' => 'Posts Import Failed',
+            'message' => 'Failed to import postal data for :country.',
+        ],
+    ],
 ];
