@@ -77,6 +77,10 @@ return [
             'label' => 'Geografska regija',
             'helper' => 'Geografska regija kojoj ova zemlja pripada',
         ],
+        'special_regions' => [
+            'label' => 'Posebne regije',
+            'helper' => 'Posebne regije kojima ova zemlja pripada (npr. Europska unija)',
+        ],
     ],
 
     'import' => [

@@ -12,6 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class ImportCountries implements ShouldQueue
@@ -75,6 +76,9 @@ class ImportCountries implements ShouldQueue
                     Country::create($data);
                 }
             }
+
+            // Seed special regions after countries are imported
+            $this->seedSpecialRegions();
 
             Log::info('Countries import completed');
             if ($user) {
@@ -157,5 +161,36 @@ class ImportCountries implements ShouldQueue
         return Region::where('name', $countryData['subregion'])
             ->where('is_special', false)
             ->value('id');
+    }
+
+    private function seedSpecialRegions(): void
+    {
+        // Create EU special region
+        $euRegion = Region::updateOrCreate(
+            ['code' => 'EU'],
+            [
+                'name' => 'European Union',
+                'is_special' => true,
+            ]
+        );
+
+        $euMemberCountries = [
+            'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR',
+            'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL',
+            'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE',
+        ];
+
+        $existingCountries = Country::whereIn('id', $euMemberCountries)->pluck('id');
+        $membershipData = $existingCountries->mapWithKeys(fn ($countryId) => [
+            $countryId => [
+                'start_date' => Carbon::now()->toDateString(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+
+        // Clear existing memberships and add new ones
+        $euRegion->specialCountries()->detach();
+        $euRegion->specialCountries()->attach($membershipData);
     }
 }

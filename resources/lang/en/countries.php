@@ -77,6 +77,10 @@ return [
             'label' => 'Geographical Region',
             'helper' => 'The geographical region this country belongs to',
         ],
+        'special_regions' => [
+            'label' => 'Special Regions',
+            'helper' => 'Special regions this country belongs to (e.g., European Union)',
+        ],
     ],
 
     'import' => [

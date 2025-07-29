@@ -69,9 +69,10 @@ class Country extends Model
 
         return $this->specialRegions()
             ->wherePivot('start_date', '<=', $checkDate->toDateString())
-            ->where(fn ($query) => $query
-                ->whereNull('world_country_in_special_region.end_date')
-                ->orWhere('world_country_in_special_region.end_date', '>=', $checkDate->toDateString())
+            ->where(
+                fn ($query) => $query
+                    ->whereNull('world_country_in_special_region.end_date')
+                    ->orWhere('world_country_in_special_region.end_date', '>=', $checkDate->toDateString())
             )
             ->get();
     }

@@ -79,6 +79,14 @@ class CountryResource extends Resource implements HasShieldPermissions
                     ->searchable()
                     ->preload()
                     ->helperText(__('eclipse-world::countries.form.region.helper')),
+
+                Select::make('special_regions')
+                    ->label(__('eclipse-world::countries.form.special_regions.label'))
+                    ->multiple()
+                    ->relationship('specialRegions', 'name', fn ($query) => $query->where('is_special', true))
+                    ->searchable()
+                    ->preload()
+                    ->helperText(__('eclipse-world::countries.form.special_regions.helper')),
             ]);
     }
 
