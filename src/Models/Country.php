@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -46,6 +47,11 @@ class Country extends Model
         return $this->belongsToMany(Region::class, 'world_country_in_special_region', 'country_id', 'region_id')
             ->withPivot(['start_date', 'end_date'])
             ->withTimestamps();
+    }
+
+    public function countryInSpecialRegions(): HasMany
+    {
+        return $this->hasMany(CountryInSpecialRegion::class, 'country_id');
     }
 
     /**

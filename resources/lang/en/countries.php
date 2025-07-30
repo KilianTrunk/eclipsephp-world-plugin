@@ -80,6 +80,10 @@ return [
         'special_regions' => [
             'label' => 'Special Regions',
             'helper' => 'Special regions this country belongs to (e.g., European Union)',
+            'add_button' => 'Add Special Region',
+            'region_label' => 'Region',
+            'start_date_label' => 'Start Date',
+            'end_date_label' => 'End Date',
         ],
     ],
 

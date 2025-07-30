@@ -6,6 +6,8 @@ use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Eclipse\World\Filament\Clusters\World;
 use Eclipse\World\Filament\Clusters\World\Resources\CountryResource\Pages;
 use Eclipse\World\Models\Country;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -80,13 +82,29 @@ class CountryResource extends Resource implements HasShieldPermissions
                     ->preload()
                     ->helperText(__('eclipse-world::countries.form.region.helper')),
 
-                Select::make('special_regions')
+                Repeater::make('countryInSpecialRegions')
+                    ->relationship()
                     ->label(__('eclipse-world::countries.form.special_regions.label'))
-                    ->multiple()
-                    ->relationship('specialRegions', 'name', fn ($query) => $query->where('is_special', true))
-                    ->searchable()
-                    ->preload()
-                    ->helperText(__('eclipse-world::countries.form.special_regions.helper')),
+                    ->columns(3)
+                    ->columnSpan(2)
+                    ->createItemButtonLabel(__('eclipse-world::countries.form.special_regions.add_button'))
+                    ->defaultItems(0)
+                    ->minItems(0)
+                    ->schema([
+                        Select::make('region_id')
+                            ->relationship('region', 'name', fn ($query) => $query->where('is_special', true))
+                            ->searchable()
+                            ->preload()
+                            ->label(__('eclipse-world::countries.form.special_regions.region_label')),
+
+                        DatePicker::make('start_date')
+                            ->required()
+                            ->label(__('eclipse-world::countries.form.special_regions.start_date_label')),
+
+                        DatePicker::make('end_date')
+                            ->nullable()
+                            ->label(__('eclipse-world::countries.form.special_regions.end_date_label')),
+                    ]),
             ]);
     }
 

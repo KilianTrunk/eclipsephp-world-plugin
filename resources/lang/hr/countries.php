@@ -80,6 +80,10 @@ return [
         'special_regions' => [
             'label' => 'Posebne regije',
             'helper' => 'Posebne regije kojima ova zemlja pripada (npr. Europska unija)',
+            'add_button' => 'Dodaj posebnu regiju',
+            'region_label' => 'Regija',
+            'start_date_label' => 'Datum početka',
+            'end_date_label' => 'Datum završetka',
         ],
     ],
 
