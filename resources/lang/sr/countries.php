@@ -106,8 +106,16 @@ return [
     ],
 
     'filters' => [
-        'region' => [
-            'label' => 'Regija',
+        'geographical_region' => [
+            'label' => 'Geografska regija',
         ],
+        'special_region' => [
+            'label' => 'Posebna regija',
+        ],
+    ],
+
+    'validation' => [
+        'duplicate_special_region_membership' => 'Ova država je već član regije :region.',
+        'unknown_region' => 'ove regije',
     ],
 ];

@@ -95,7 +95,39 @@ class CountryResource extends Resource implements HasShieldPermissions
                             ->relationship('region', 'name', fn ($query) => $query->where('is_special', true))
                             ->searchable()
                             ->preload()
-                            ->label(__('eclipse-world::countries.form.special_regions.region_label')),
+                            ->label(__('eclipse-world::countries.form.special_regions.region_label'))
+                            ->rules([
+                                function ($get) {
+                                    return function (string $attribute, $value, \Closure $fail) use ($get) {
+                                        if (! $value) {
+                                            return;
+                                        }
+
+                                        $countryId = $get('../../id');
+                                        $currentRecordId = $get('id');
+
+                                        if (! $countryId) {
+                                            return;
+                                        }
+
+                                        // Check for any existing membership with same country and region
+                                        $query = \Eclipse\World\Models\CountryInSpecialRegion::where('country_id', $countryId)
+                                            ->where('region_id', $value);
+
+                                        // Exclude current record when editing
+                                        if ($currentRecordId) {
+                                            $query->where('id', '!=', $currentRecordId);
+                                        }
+
+                                        if ($query->exists()) {
+                                            $regionName = \Eclipse\World\Models\Region::find($value)?->name ?? __('eclipse-world::countries.validation.unknown_region');
+                                            $fail(__('eclipse-world::countries.validation.duplicate_special_region_membership', [
+                                                'region' => $regionName,
+                                            ]));
+                                        }
+                                    };
+                                },
+                            ]),
 
                         DatePicker::make('start_date')
                             ->required()
@@ -156,8 +188,31 @@ class CountryResource extends Resource implements HasShieldPermissions
             ])
             ->filters([
                 SelectFilter::make('region_id')
-                    ->label(__('eclipse-world::countries.filters.region.label'))
+                    ->label(__('eclipse-world::countries.filters.geographical_region.label'))
                     ->relationship('region', 'name', fn ($query) => $query->where('is_special', false))
+                    ->searchable()
+                    ->preload(),
+                SelectFilter::make('special_regions')
+                    ->label(__('eclipse-world::countries.filters.special_region.label'))
+                    ->options(function () {
+                        return \Eclipse\World\Models\Region::where('is_special', true)
+                            ->pluck('name', 'id')
+                            ->toArray();
+                    })
+                    ->query(function (Builder $query, array $data): Builder {
+                        if (! empty($data['value'])) {
+                            return $query->whereHas('specialRegions', function (Builder $query) use ($data) {
+                                $query->where('world_regions.id', $data['value'])
+                                    ->where('world_country_in_special_region.start_date', '<=', now())
+                                    ->where(function ($query) {
+                                        $query->whereNull('world_country_in_special_region.end_date')
+                                            ->orWhere('world_country_in_special_region.end_date', '>=', now());
+                                    });
+                            });
+                        }
+
+                        return $query;
+                    })
                     ->searchable()
                     ->preload(),
                 TrashedFilter::make(),

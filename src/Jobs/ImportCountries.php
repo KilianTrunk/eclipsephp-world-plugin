@@ -181,16 +181,44 @@ class ImportCountries implements ShouldQueue
         ];
 
         $existingCountries = Country::whereIn('id', $euMemberCountries)->pluck('id');
-        $membershipData = $existingCountries->mapWithKeys(fn ($countryId) => [
-            $countryId => [
-                'start_date' => Carbon::now()->toDateString(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
 
-        // Clear existing memberships and add new ones
-        $euRegion->specialCountries()->detach();
-        $euRegion->specialCountries()->attach($membershipData);
+        // Get current memberships
+        $currentMemberships = $euRegion->specialCountries()
+            ->wherePivot('start_date', '<=', Carbon::now()->toDateString())
+            ->where(function ($query) {
+                $query->whereNull('world_country_in_special_region.end_date')
+                    ->orWhere('world_country_in_special_region.end_date', '>=', Carbon::now()->toDateString());
+            })
+            ->pluck('world_countries.id')
+            ->toArray();
+
+        // Only update if there are changes needed
+        $countriesToAdd = $existingCountries->diff($currentMemberships);
+        $countriesToRemove = collect($currentMemberships)->diff($existingCountries);
+
+        // Add new countries
+        if ($countriesToAdd->isNotEmpty()) {
+            $membershipData = $countriesToAdd->mapWithKeys(fn ($countryId) => [
+                $countryId => [
+                    'start_date' => Carbon::now()->toDateString(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+            ]);
+            $euRegion->specialCountries()->attach($membershipData);
+        }
+
+        // Remove countries that are no longer members
+        if ($countriesToRemove->isNotEmpty()) {
+            foreach ($countriesToRemove as $countryId) {
+                $euRegion->specialCountries()
+                    ->wherePivot('country_id', $countryId)
+                    ->whereNull('world_country_in_special_region.end_date')
+                    ->updateExistingPivot($countryId, [
+                        'end_date' => Carbon::now()->subDay()->toDateString(),
+                        'updated_at' => now(),
+                    ]);
+            }
+        }
     }
 }

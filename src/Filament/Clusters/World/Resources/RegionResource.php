@@ -97,8 +97,25 @@ class RegionResource extends Resource implements HasShieldPermissions
 
                 TextColumn::make('countries_count')
                     ->label(__('eclipse-world::regions.table.countries_count.label'))
-                    ->counts('countries')
-                    ->sortable(),
+                    ->getStateUsing(function (Region $record): int {
+                        if ($record->is_special) {
+                            return $record->getCountriesInSpecialRegion()->count();
+                        }
+
+                        return $record->countries()->count();
+                    })
+                    ->sortable(query: function (Builder $query, string $direction): Builder {
+                        return $query->withCount([
+                            'countries',
+                            'specialCountries' => function ($query) {
+                                $query->where('world_country_in_special_region.start_date', '<=', now())
+                                    ->where(function ($query) {
+                                        $query->whereNull('world_country_in_special_region.end_date')
+                                            ->orWhere('world_country_in_special_region.end_date', '>=', now());
+                                    });
+                            },
+                        ])->orderBy('countries_count', $direction);
+                    }),
 
                 TextColumn::make('children_count')
                     ->label(__('eclipse-world::regions.table.children_count.label'))

@@ -106,8 +106,16 @@ return [
     ],
 
     'filters' => [
-        'region' => [
-            'label' => 'Region',
+        'geographical_region' => [
+            'label' => 'Geographical Region',
         ],
+        'special_region' => [
+            'label' => 'Special Region',
+        ],
+    ],
+
+    'validation' => [
+        'duplicate_special_region_membership' => 'This country is already a member of :region.',
+        'unknown_region' => 'this region',
     ],
 ];
