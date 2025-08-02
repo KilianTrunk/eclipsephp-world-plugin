@@ -68,22 +68,18 @@ return [
         'modal_heading' => 'Uvoz pošt',
         'country_label' => 'Izberi državo',
         'country_helper' => 'Izberi državo, za katero želiš uvoziti poštne podatke',
-        'success_title' => 'Uvoz pošt',
-        'success_message' => 'Naloga za uvoz pošt je bila dodana v čakalno vrsto za :country.',
-        'countries' => [
-            'SI' => 'Slovenija',
-            'HR' => 'Hrvaška',
-        ],
+        'job_name' => 'Uvoz pošt',
     ],
 
     'notifications' => [
-        'success' => [
-            'title' => 'Uvoz pošt uspešno končan',
-            'message' => 'Poštni podatki za :country so bili uspešno uvoženi.',
+        'queued' => [
+            'message' => 'Opravilo za uvoz pošt za državo :country je bilo dodana v vrsto.',
+        ],
+        'completed' => [
+            'message' => 'Poštni podatki za državo :country so bili uspešno uvoženi.',
         ],
         'failed' => [
-            'title' => 'Uvoz pošt neuspešen',
-            'message' => 'Uvoz poštnih podatkov za :country ni uspel.',
+            'message' => 'Uvoz poštnih podatkov za državo :country ni uspel.',
         ],
     ],
 ];

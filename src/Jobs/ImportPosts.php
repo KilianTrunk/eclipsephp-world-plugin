@@ -2,113 +2,85 @@
 
 namespace Eclipse\World\Jobs;
 
-use Eclipse\Core\Models\User;
+use Eclipse\Common\Foundation\Jobs\QueueableJob;
+use Eclipse\World\Models\Country;
 use Eclipse\World\Models\Post;
-use Eclipse\World\Notifications\ImportFinishedNotification;
 use Exception;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use InvalidArgumentException;
+use Throwable;
 
-class ImportPosts implements ShouldQueue
+class ImportPosts extends QueueableJob
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
     private const string OPENDATASOFT_RECORDS_API_URL = 'https://data.opendatasoft.com/api/records/1.0/';
 
     public string $countryId;
 
-    public int $userId;
-
-    public string $locale;
-
-    /**
-     * Create a new job instance.
-     */
-    public function __construct(string $countryId, int $userId, string $locale = 'en')
+    public function __construct(string $countryId, string $locale = null)
     {
         $this->countryId = $countryId;
-        $this->userId = $userId;
-        $this->locale = $locale;
+
+        parent::__construct($locale);
     }
 
-    /**
-     * Execute the job.
-     */
-    public function handle(): void
+    protected function execute(): void
     {
         if (! in_array($this->countryId, ['SI', 'HR'])) {
-            throw new Exception("Country {$this->countryId} not supported for import");
+            throw new InvalidArgumentException("Country $this->countryId not supported for import");
         }
 
         $batchSize = 1000;
         $offset = 0;
         $processedCodes = [];
 
-        Log::info("Starting postal data import for country: {$this->countryId}");
+        Log::info("Starting postal data import for country: $this->countryId");
 
-        $user = $this->userId ? User::find($this->userId) : null;
+        do {
+            [$totalRecords, $records] = $this->getData($batchSize, $offset);
 
-        try {
-            do {
-                [$totalRecords, $records] = $this->getData($batchSize, $offset);
+            foreach ($records as $record) {
+                [$postalCode, $placeName] = $this->getRecordData($record);
 
-                foreach ($records as $record) {
-                    [$postalCode, $placeName] = $this->getRecordData($record);
-
-                    if (array_key_exists($postalCode, $processedCodes)) {
-                        continue;
-                    }
-
-                    $processedCodes[$postalCode] = true;
-
-                    $existingPost = Post::where('country_id', $this->countryId)
-                        ->where('code', $postalCode)
-                        ->first();
-
-                    if (empty($existingPost)) {
-                        Post::create([
-                            'country_id' => $this->countryId,
-                            'code' => $postalCode,
-                            'name' => $placeName,
-                        ]);
-                    } elseif ($existingPost->name !== $placeName) {
-                        $existingPost->update(['name' => $placeName]);
-                    }
+                if (array_key_exists($postalCode, $processedCodes)) {
+                    continue;
                 }
 
-                $offset += $batchSize;
-            } while ($offset < $totalRecords);
+                $processedCodes[$postalCode] = true;
 
-            Log::info("Postal data import completed for {$this->countryId}");
-            if ($user) {
-                $user->notify(new ImportFinishedNotification('success', 'posts', $this->countryId, $this->locale));
+                $existingPost = Post::where('country_id', $this->countryId)
+                    ->where('code', $postalCode)
+                    ->first();
+
+                if (empty($existingPost)) {
+                    Post::create([
+                        'country_id' => $this->countryId,
+                        'code' => $postalCode,
+                        'name' => $placeName,
+                    ]);
+                } elseif ($existingPost->name !== $placeName) {
+                    $existingPost->update(['name' => $placeName]);
+                }
             }
-        } catch (Exception $e) {
-            Log::error("Postal data import failed for {$this->countryId}: {$e->getMessage()}");
-            if ($user) {
-                $user->notify(new ImportFinishedNotification('failed', 'posts', $this->countryId, $this->locale));
-            }
-            throw $e;
-        }
+
+            $offset += $batchSize;
+        } while ($offset < $totalRecords);
     }
 
     /**
      * Get data from the external API
+     *
+     * @throws Throwable
      */
     private function getData(int $batchSize, int $offset): array
     {
         $url = self::OPENDATASOFT_RECORDS_API_URL
             .'search/?dataset=geonames-postal-code@public'
             .'&q='
-            ."&rows={$batchSize}"
-            ."&start={$offset}"
+            ."&rows=$batchSize"
+            ."&start=$offset"
             .'&sort=postal_code'
-            ."&refine.country_code={$this->countryId}";
+            ."&refine.country_code=$this->countryId";
 
         $response = Http::get($url);
 
@@ -133,21 +105,27 @@ class ImportPosts implements ShouldQueue
      */
     private function getRecordData(array $record): array
     {
-        switch ($this->countryId) {
-            case 'HR':
-                return [
-                    $record['fields']['postal_code'],
-                    $record['fields']['admin_name3'],
-                ];
+        return match ($this->countryId) {
+            'HR' => [
+                $record['fields']['postal_code'],
+                $record['fields']['admin_name3'],
+            ],
+            default => [
+                $record['fields']['postal_code'],
+                $record['fields']['place_name'],
+            ],
+        };
+    }
 
-            case 'SI':
-                return [
-                    $record['fields']['postal_code'],
-                    $record['fields']['place_name'],
-                ];
+    protected function getJobName(): string
+    {
+        return __('eclipse-world::posts.import.job_name', [], $this->locale);
+    }
 
-            default:
-                throw new Exception("Country {$this->countryId} not supported");
-        }
+    protected function getNotificationBody(): string
+    {
+        return __("eclipse-world::posts.notifications.{$this->status->value}.message", [
+            'country' => Country::find($this->countryId)?->name ?? $this->countryId,
+        ], $this->locale);
     }
 }

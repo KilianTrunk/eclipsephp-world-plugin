@@ -72,18 +72,18 @@ return [
     'import' => [
         'action_label' => 'Uvezi države',
         'modal_heading' => 'Uvoz država',
-        'success_title' => 'Uvoz država',
-        'success_message' => 'Zadatak za uvoz država je dodan u red čekanja.',
+        'job_name' => 'Uvoz država',
     ],
 
     'notifications' => [
-        'success' => [
+        'queued' => [
+            'title' => 'Uvoz država postavljen u vrstu',
+        ],
+        'completed' => [
             'title' => 'Uvoz država završen',
-            'message' => 'Sve države su uspješno uvežene i ažurirane.',
         ],
         'failed' => [
             'title' => 'Uvoz država neuspješan',
-            'message' => 'Neuspješan uvoz podataka država.',
         ],
     ],
 ];
