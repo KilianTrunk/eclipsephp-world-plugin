@@ -17,7 +17,7 @@ class ImportPosts extends QueueableJob
 
     public string $countryId;
 
-    public function __construct(string $countryId, string $locale = null)
+    public function __construct(string $countryId, ?string $locale = null)
     {
         $this->countryId = $countryId;
 

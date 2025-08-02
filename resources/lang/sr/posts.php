@@ -68,7 +68,7 @@ return [
         'modal_heading' => 'Uvoz pošta',
         'country_label' => 'Odaberi državu',
         'country_helper' => 'Odaberi državu za koju želiš da uvoziš poštanske podatke',
-        'job_name' => 'Uvoz pošta'
+        'job_name' => 'Uvoz pošta',
     ],
 
     'notifications' => [

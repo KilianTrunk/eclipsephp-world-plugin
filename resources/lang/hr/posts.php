@@ -73,7 +73,7 @@ return [
 
     'notifications' => [
         'queued' => [
-            'message' => 'Uvoz pošta za državu :country postavljen u vrstu.'
+            'message' => 'Uvoz pošta za državu :country postavljen u vrstu.',
         ],
         'completed' => [
             'message' => 'Poštanski podaci za državu :country su uspješno uveženi.',
