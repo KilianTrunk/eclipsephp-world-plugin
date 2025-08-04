@@ -6,9 +6,7 @@ use Eclipse\World\Filament\Clusters\World\Resources\CountryResource;
 use Eclipse\World\Jobs\ImportCountries;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
-use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
-use Illuminate\Support\Facades\App;
 
 class ListCountries extends ListRecords
 {
@@ -25,14 +23,7 @@ class ListCountries extends ListRecords
                 ->icon('heroicon-o-arrow-down-tray')
                 ->action(function () {
                     // Dispatch the job
-                    ImportCountries::dispatch(auth()->id(), App::getLocale());
-
-                    // Show notification
-                    Notification::make()
-                        ->title('Import Countries')
-                        ->body('The import countries job has been queued.')
-                        ->success()
-                        ->send();
+                    ImportCountries::dispatch();
                 })
                 ->requiresConfirmation(),
         ];

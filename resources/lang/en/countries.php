@@ -90,18 +90,18 @@ return [
     'import' => [
         'action_label' => 'Import Countries',
         'modal_heading' => 'Import Countries',
-        'success_title' => 'Import Countries',
-        'success_message' => 'The import countries job has been queued.',
+        'job_name' => 'Import Countries',
     ],
 
     'notifications' => [
-        'success' => [
-            'title' => 'Countries Import Completed',
-            'message' => 'All countries have been successfully imported and updated.',
+        'queued' => [
+            'title' => 'Countries Import queued',
+        ],
+        'completed' => [
+            'title' => 'Countries Import completed',
         ],
         'failed' => [
-            'title' => 'Countries Import Failed',
-            'message' => 'Failed to import countries data.',
+            'title' => 'Countries Import failed',
         ],
     ],
 

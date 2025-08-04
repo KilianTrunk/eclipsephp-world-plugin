@@ -4,12 +4,11 @@ namespace Eclipse\World\Filament\Clusters\World\Resources\PostResource\Pages;
 
 use Eclipse\World\Filament\Clusters\World\Resources\PostResource;
 use Eclipse\World\Jobs\ImportPosts;
+use Eclipse\World\Models\Country;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\Select;
-use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
-use Illuminate\Support\Facades\App;
 
 class ListPosts extends ListRecords
 {
@@ -29,8 +28,8 @@ class ListPosts extends ListRecords
                         ->label(__('eclipse-world::posts.import.country_label'))
                         ->helperText(__('eclipse-world::posts.import.country_helper'))
                         ->options([
-                            'SI' => __('eclipse-world::posts.import.countries.SI'),
-                            'HR' => __('eclipse-world::posts.import.countries.HR'),
+                            'SI' => Country::find('SI')?->name ?: 'SI',
+                            'HR' => Country::find('HR')?->name ?: 'HR',
                         ])
                         ->required()
                         ->native(false),
@@ -38,16 +37,7 @@ class ListPosts extends ListRecords
                 ->modalHeading(__('eclipse-world::posts.import.modal_heading'))
                 ->action(function (array $data) {
                     // Dispatch the job
-                    ImportPosts::dispatch($data['country_id'], auth()->id(), App::getLocale());
-
-                    // Show notification
-                    Notification::make()
-                        ->title(__('eclipse-world::posts.import.success_title'))
-                        ->body(__('eclipse-world::posts.import.success_message', [
-                            'country' => __('eclipse-world::posts.import.countries.'.$data['country_id']),
-                        ]))
-                        ->success()
-                        ->send();
+                    ImportPosts::dispatch(countryId: $data['country_id']);
                 })
                 ->requiresConfirmation(),
         ];

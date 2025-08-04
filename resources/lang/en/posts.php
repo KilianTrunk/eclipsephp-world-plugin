@@ -68,21 +68,17 @@ return [
         'modal_heading' => 'Import Posts',
         'country_label' => 'Select Country',
         'country_helper' => 'Choose the country for which you want to import postal data',
-        'success_title' => 'Import Posts',
-        'success_message' => 'The import posts job has been queued for :country.',
-        'countries' => [
-            'SI' => 'Slovenia',
-            'HR' => 'Croatia',
-        ],
+        'job_name' => 'Import Posts',
     ],
 
     'notifications' => [
-        'success' => [
-            'title' => 'Posts Import Completed',
+        'queued' => [
+            'message' => 'The import posts job has been queued for :country.',
+        ],
+        'completed' => [
             'message' => 'Postal data for :country has been successfully imported.',
         ],
         'failed' => [
-            'title' => 'Posts Import Failed',
             'message' => 'Failed to import postal data for :country.',
         ],
     ],

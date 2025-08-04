@@ -2,10 +2,9 @@
 
 namespace Eclipse\World\Jobs;
 
-use Eclipse\Core\Models\User;
+use Eclipse\Common\Foundation\Jobs\QueueableJob;
 use Eclipse\World\Models\Country;
 use Eclipse\World\Models\Region;
-use Eclipse\World\Notifications\ImportFinishedNotification;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,82 +14,60 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 
-class ImportCountries implements ShouldQueue
+class ImportCountries extends QueueableJob
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
     public int $timeout = 60;
 
     public bool $failOnTimeout = true;
 
-    public ?int $userId;
-
-    public string $locale;
-
-    /**
-     * Create a new job instance.
-     */
-    public function __construct(?int $userId, string $locale = 'en')
+    protected function execute(): void
     {
-        $this->userId = $userId;
-        $this->locale = $locale;
-    }
-
-    public function handle(): void
-    {
-        Log::info('Starting countries import');
-
-        $user = $this->userId ? User::find($this->userId) : null;
-
-        try {
             // First, import/update regions
             $this->importRegions();
 
-            // Load existing countries into an associative array
-            $existingCountries = Country::withTrashed()->get()->keyBy('id');
+        // Load existing countries into an associative array
+        $existingCountries = Country::withTrashed()->get()->keyBy('id');
 
-            // Load new country data
-            $countries = json_decode(file_get_contents('https://raw.githubusercontent.com/mledoze/countries/master/dist/countries.json'), true);
+        // Load new country data
+        $countries = json_decode(file_get_contents('https://raw.githubusercontent.com/mledoze/countries/master/dist/countries.json'), true);
 
-            if (! $countries) {
-                throw new Exception('Failed to fetch or parse countries data');
+        if (! $countries) {
+            throw new Exception('Failed to fetch or parse countries data');
+        }
+
+        foreach ($countries as $rawData) {
+            if (! $rawData['independent']) {
+                continue;
             }
 
-            foreach ($countries as $rawData) {
-                if (! $rawData['independent']) {
-                    continue;
-                }
-
-                $data = [
-                    'id' => $rawData['cca2'],
-                    'a3_id' => $rawData['cca3'],
-                    'num_code' => $rawData['ccn3'],
-                    'name' => $rawData['name']['common'],
-                    'flag' => $rawData['flag'],
+            $data = [
+                'id' => $rawData['cca2'],
+                'a3_id' => $rawData['cca3'],
+                'num_code' => $rawData['ccn3'],
+                'name' => $rawData['name']['common'],
+                'flag' => $rawData['flag'],
                     'region_id' => $this->getRegionIdForCountry($rawData),
-                ];
+            ];
 
-                if (isset($existingCountries[$data['id']])) {
-                    $existingCountries[$data['id']]->update($data);
-                } else {
-                    Country::create($data);
-                }
+            if (isset($existingCountries[$data['id']])) {
+                $existingCountries[$data['id']]->update($data);
+            } else {
+                Country::create($data);
             }
+        }
 
             // Seed special regions after countries are imported
             $this->seedSpecialRegions();
+    }
 
-            Log::info('Countries import completed');
-            if ($user) {
-                $user->notify(new ImportFinishedNotification('success', 'countries', null, $this->locale));
-            }
-        } catch (Exception $e) {
-            Log::error('Countries import failed: '.$e->getMessage());
-            if ($user) {
-                $user->notify(new ImportFinishedNotification('failed', 'countries', null, $this->locale));
-            }
-            throw $e;
-        }
+    protected function getJobName(): string
+    {
+        return __('eclipse-world::countries.import.job_name', [], $this->locale);
+    }
+
+    protected function getNotificationTitle(): string
+    {
+        return __("eclipse-world::countries.notifications.{$this->status->value}.title", [], $this->locale);
     }
 
     private function importRegions(): void
