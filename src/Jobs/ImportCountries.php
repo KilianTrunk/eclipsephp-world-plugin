@@ -6,13 +6,7 @@ use Eclipse\Common\Foundation\Jobs\QueueableJob;
 use Eclipse\World\Models\Country;
 use Eclipse\World\Models\Region;
 use Exception;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class ImportCountries extends QueueableJob
 {
@@ -22,8 +16,8 @@ class ImportCountries extends QueueableJob
 
     protected function execute(): void
     {
-            // First, import/update regions
-            $this->importRegions();
+        // First, import/update regions
+        $this->importRegions();
 
         // Load existing countries into an associative array
         $existingCountries = Country::withTrashed()->get()->keyBy('id');
@@ -46,7 +40,7 @@ class ImportCountries extends QueueableJob
                 'num_code' => $rawData['ccn3'],
                 'name' => $rawData['name']['common'],
                 'flag' => $rawData['flag'],
-                    'region_id' => $this->getRegionIdForCountry($rawData),
+                'region_id' => $this->getRegionIdForCountry($rawData),
             ];
 
             if (isset($existingCountries[$data['id']])) {
@@ -56,8 +50,8 @@ class ImportCountries extends QueueableJob
             }
         }
 
-            // Seed special regions after countries are imported
-            $this->seedSpecialRegions();
+        // Seed special regions after countries are imported
+        $this->seedSpecialRegions();
     }
 
     protected function getJobName(): string
