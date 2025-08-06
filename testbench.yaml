@@ -30,3 +30,5 @@ workbench:
     - from: storage
       to: workbench/storage
       reverse: true
+  exclude:
+    - workbench/app/Models/User.php
