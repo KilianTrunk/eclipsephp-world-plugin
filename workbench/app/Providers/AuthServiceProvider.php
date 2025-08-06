@@ -2,10 +2,10 @@
 
 namespace Workbench\App\Providers;
 
-use Workbench\App\Policies\CountryPolicy;
-use Workbench\App\Policies\CurrencyPolicy;
-use Workbench\App\Policies\PostPolicy;
-use Workbench\App\Policies\RolePolicy;
+use App\Policies\CountryPolicy;
+use App\Policies\CurrencyPolicy;
+use App\Policies\PostPolicy;
+use App\Policies\RolePolicy;
 use Eclipse\World\Models\Country;
 use Eclipse\World\Models\Currency;
 use Eclipse\World\Models\Post;
