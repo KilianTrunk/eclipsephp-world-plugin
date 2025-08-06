@@ -12,3 +12,6 @@
 /node_modules
 /phpunit.xml
 /vendor
+/storage/*
+!/storage/logs/
+!/storage/logs/.gitkeep
