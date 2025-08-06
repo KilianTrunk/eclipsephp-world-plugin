@@ -7,7 +7,7 @@ migrations:
   - workbench/database/migrations
 
 seeders:
-  - Workbench\Database\Seeders\DatabaseSeeder
+  - Workbench\Database\Seeders\WorkbenchDatabaseSeeder
 
 workbench:
   start: '/'
@@ -32,3 +32,4 @@ workbench:
       reverse: true
   exclude:
     - workbench/app/Models/User.php
+    - workbench/database/seeders/DatabaseSeeder.php
