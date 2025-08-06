@@ -14,10 +14,10 @@ class WorkbenchServiceProvider extends ServiceProvider
     {
         $this->app->register(AdminPanelProvider::class);
         $this->app->register(AuthServiceProvider::class);
-        
+
         // Register the DatabaseSeeder with the proper namespace
         $this->app->singleton('seeder', function ($app) {
-            return new WorkbenchDatabaseSeeder();
+            return new WorkbenchDatabaseSeeder;
         });
     }
 

@@ -4,8 +4,8 @@ namespace Workbench\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Workbench\App\Models\User;
 
 class WorkbenchDatabaseSeeder extends Seeder
@@ -17,7 +17,7 @@ class WorkbenchDatabaseSeeder extends Seeder
     {
         // Generate permissions using Filament Shield
         $this->command->info('Generating permissions using Filament Shield...');
-        
+
         // Generate permissions for all resources
         \Artisan::call('shield:generate', [
             '--panel' => 'admin',
@@ -60,4 +60,4 @@ class WorkbenchDatabaseSeeder extends Seeder
 
         $testUser->assignRole($superAdminRole);
     }
-} 
+}

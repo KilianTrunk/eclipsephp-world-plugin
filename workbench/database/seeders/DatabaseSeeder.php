@@ -15,4 +15,4 @@ class DatabaseSeeder extends Seeder
         // Call the workbench database seeder
         $this->call(WorkbenchDatabaseSeeder::class);
     }
-} 
+}
