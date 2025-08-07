@@ -1,25 +1,44 @@
 # 1. Keep lines sorted alphabetically in this file
-# 2. Do not add OS or IDE specific lines here — do it in the global .gitignore: https://gist.github.com/subfuzion/db7f57fff2fb6998a16c
-# -----------------------
+# 2. Do not add OS or IDE specific lines here — do it in the global .gitignore:
+#    https://gist.github.com/subfuzion/db7f57fff2fb6998a16c
+
+/.phpactor.json
 /.phpunit.cache
-bootstrap/cache/
-app/Policies/
-/build
-/node_modules
+/.phpunit.result.cache
+/.lando.local.yml
+/.env
+/.env.backup
+/.env.production
+/.npm-debug.log
+/.auth.json
+/composer.lock
+/node_modules/
 /packages/*/
+/vendor/
+
+# cache & logs: ignore everything except .gitkeep
+/bootstrap/cache/*
+!/bootstrap/cache/.gitkeep
+
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitkeep
+
+/storage/logs/*
+!/storage/logs/.gitkeep
+
+# keep your app policies source in version control
+# (remove the old /app/Policies/ rule)
+/app/Policies/
+
+# other storage-related
 /storage/*.key
 /storage/pail
-/vendor
-.env
-.env.backup
-.env.production
-.lando.local.yml
-.phpactor.json
-.phpunit.result.cache
-auth.json
-composer.lock
-node_modules/
+
+# build artifacts
+/build
+
+# PHPUnit config
+/phpunit.xml
+
+# npm
 npm-debug.log
-phpunit.xml
-storage
-vendor/
