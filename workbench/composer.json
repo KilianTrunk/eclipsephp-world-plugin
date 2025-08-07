@@ -68,6 +68,9 @@
         "soloterm/solo": "^0.5.0"
     },
     "scripts": {
+        "pre-install-cmd": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
         "format": "vendor/bin/pint",
         "test": "vendor/bin/pest",
         "post-autoload-dump": [
