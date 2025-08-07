@@ -34,9 +34,9 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/",
-            "Workbench\\App\\": "workbench/app/",
-            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
-            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+            "App\\World\\Workbench\\": "workbench/app/",
+            "App\\World\\Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "App\\World\\Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
         }
     },
     "require": {

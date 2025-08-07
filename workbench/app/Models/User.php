@@ -1,6 +1,6 @@
 <?php
 
-namespace Workbench\App\Models;
+namespace App\World\Workbench\Models;
 
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
-use Workbench\Database\Factories\UserFactory;
+use App\World\Workbench\Database\Factories\UserFactory;
 
 /**
  * @property int $id

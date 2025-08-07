@@ -1,11 +1,11 @@
 <?php
 
-namespace Workbench\App\Providers;
+namespace App\World\Workbench\Providers;
 
-use App\Policies\CountryPolicy;
-use App\Policies\CurrencyPolicy;
-use App\Policies\PostPolicy;
-use App\Policies\RolePolicy;
+use App\World\Workbench\Policies\CountryPolicy;
+use App\World\Workbench\Policies\CurrencyPolicy;
+use App\World\Workbench\Policies\PostPolicy;
+use App\World\Workbench\Policies\RolePolicy;
 use Eclipse\World\Models\Country;
 use Eclipse\World\Models\Currency;
 use Eclipse\World\Models\Post;

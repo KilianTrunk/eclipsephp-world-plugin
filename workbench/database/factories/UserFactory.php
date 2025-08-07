@@ -1,14 +1,14 @@
 <?php
 
-namespace Workbench\Database\Factories;
+namespace App\World\Workbench\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Workbench\App\Models\User;
+use App\World\Workbench\Models\User;
 
 /**
- * @template TModel of \Workbench\App\Models\User
+ * @template TModel of \App\World\Workbench\Models\User
  *
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<TModel>
  */

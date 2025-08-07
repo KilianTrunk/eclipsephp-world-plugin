@@ -34,11 +34,9 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Workbench\\App\\": "app/",
-            "App\\": "app/",
-            "Workbench\\Database\\Factories\\": "database/factories/",
-            "Workbench\\Database\\Seeders\\": "database/seeders/",
-            "Database\\Seeders\\": "database/seeders/"
+            "App\\World\\Workbench\\": "app/",
+            "App\\World\\Workbench\\Database\\Factories\\": "database/factories/",
+            "App\\World\\Workbench\\Database\\Seeders\\": "database/seeders/"
         }
     },
     "autoload-dev": {

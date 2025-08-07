@@ -1,6 +1,6 @@
 <?php
 
 return [
-    Workbench\App\Providers\WorkbenchServiceProvider::class,
-    Workbench\App\Providers\AdminPanelProvider::class,
+    App\World\Workbench\Providers\WorkbenchServiceProvider::class,
+    App\World\Workbench\Providers\AdminPanelProvider::class,
 ];

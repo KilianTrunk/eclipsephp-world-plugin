@@ -1,9 +1,9 @@
 <?php
 
-namespace Database\Seeders;
+namespace App\World\Workbench\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Workbench\Database\Seeders\WorkbenchDatabaseSeeder;
+use App\World\Workbench\Database\Seeders\WorkbenchDatabaseSeeder;
 
 class DatabaseSeeder extends Seeder
 {

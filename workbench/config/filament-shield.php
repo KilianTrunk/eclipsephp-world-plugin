@@ -16,7 +16,7 @@ return [
     'tenant_model' => \Eclipse\Core\Models\Site::class,
 
     'auth_provider_model' => [
-        'fqcn' => \Workbench\App\Models\User::class,
+        'fqcn' => \App\World\Workbench\Models\User::class,
     ],
 
     'super_admin' => [
@@ -61,7 +61,7 @@ return [
     'generator' => [
         'option' => 'policies_and_permissions',
         'policy_directory' => 'Policies',
-        'policy_namespace' => 'Policies',
+        'policy_namespace' => 'World\Workbench\Policies',
     ],
 
     'exclude' => [
