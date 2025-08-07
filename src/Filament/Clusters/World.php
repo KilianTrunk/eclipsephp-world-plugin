@@ -22,5 +22,4 @@ class World extends Cluster
     {
         return __('eclipse-common::nav.configuration');
     }
-
 }
