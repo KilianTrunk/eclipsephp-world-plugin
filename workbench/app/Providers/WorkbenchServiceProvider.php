@@ -3,7 +3,9 @@
 namespace App\World\Workbench\Providers;
 
 use Illuminate\Support\ServiceProvider;
-#use App\World\Workbench\Database\Seeders\WorkbenchDatabaseSeeder;
+use App\World\Workbench\Database\Seeders\DatabaseSeeder;
+use App\World\Workbench\Providers\AdminPanelProvider;
+use App\World\Workbench\Providers\AuthServiceProvider;
 
 class WorkbenchServiceProvider extends ServiceProvider
 {
@@ -15,9 +17,8 @@ class WorkbenchServiceProvider extends ServiceProvider
         $this->app->register(AdminPanelProvider::class);
         $this->app->register(AuthServiceProvider::class);
 
-        // Register the DatabaseSeeder with the proper namespace
-        $this->app->bind(\Database\Seeders\DatabaseSeeder::class, function ($app) {
-            return new \App\World\Workbench\Database\Seeders\DatabaseSeeder;
+        $this->app->bind('DatabaseSeeder', function ($app) {
+            return new DatabaseSeeder;
         });
     }
 

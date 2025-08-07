@@ -7,7 +7,7 @@ migrations:
   - workbench/database/migrations
 
 seeders:
-  - App\World\Workbench\Database\Seeders\WorkbenchDatabaseSeeder
+  - DatabaseSeeder
 
 workbench:
   start: '/'
