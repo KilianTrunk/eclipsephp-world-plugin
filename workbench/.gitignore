@@ -1,34 +1,47 @@
-# 1. Keep lines sorted alphabetically
-# 2. Do not add OS or IDE specific lines here — use global .gitignore: https://gist.github.com/subfuzion/db7f57fff2fb6998a16c
-# -----------------------
+# 1. Keep lines sorted alphabetically in this file
+# 2. Do not add OS or IDE specific lines here — do it in the global .gitignore:
+#    https://gist.github.com/subfuzion/db7f57fff2fb6998a16c
 
+/.phpactor.json
+/.phpunit.cache
+/.phpunit.result.cache
+/.lando.local.yml
 /.env
 /.env.backup
 /.env.production
-/.lando.local.yml
-/.php-cs-fixer.cache
-/.phpunit.result.cache
-
-/build
+/.npm-debug.log
+/.auth.json
 /composer.lock
-/node_modules
-/phpunit.xml
-/vendor
+/node_modules/
+/packages/*/
+/vendor/
 
-/storage/*
-!/storage/app/
-!/storage/framework/
-!/storage/framework/cache/
-!/storage/framework/cache/data/
-!/storage/framework/sessions/
-!/storage/framework/views/
-!/storage/framework/views/.gitignore
-!/storage/logs/
-!/storage/logs/.gitkeep
-/storage/framework/views/*.php
+# cache & logs: ignore everything except .gitkeep
+/bootstrap/cache/*
+!/bootstrap/cache/.gitkeep
+
 /storage/framework/sessions/*
-!/storage/framework/sessions/.gitignore
-app/Policies/*
-bootstrap/cache/*.php
-storage/framework/cache/*.php
-storage/logs/*.log
+!/storage/framework/sessions/.gitkeep
+
+/storage/logs/*
+!/storage/logs/.gitkeep
+
+/storage/framework/cache/*
+/storage/framework/views/*
+
+# keep your app policies source in version control
+# (remove the old /app/Policies/ rule)
+/app/Policies/
+
+# other storage-related
+/storage/*.key
+/storage/pail
+
+# build artifacts
+/build
+
+# PHPUnit config
+/phpunit.xml
+
+# npm
+npm-debug.log
