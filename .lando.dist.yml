@@ -29,6 +29,7 @@ services:
     build_as_root:
       - cp -f /app/.lando/horizon.conf /etc/supervisor/conf.d/horizon.conf
     run:
+      - cd workbench && [ ! -f .env ] && cp .env.example .env || true
       - cd workbench && php artisan key:generate --force
       - cd workbench && php artisan migrate:fresh --seed
       - cd workbench && npm install
