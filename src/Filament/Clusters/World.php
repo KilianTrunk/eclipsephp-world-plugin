@@ -8,8 +8,6 @@ class World extends Cluster
 {
     protected static ?string $navigationIcon = 'heroicon-s-map';
 
-    protected static ?string $navigationGroup = 'Configuration';
-
     public static function getNavigationLabel(): string
     {
         return __('eclipse-world::cluster.label');
@@ -19,4 +17,10 @@ class World extends Cluster
     {
         return self::getNavigationLabel();
     }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('eclipse-common::nav.configuration');
+    }
+
 }
