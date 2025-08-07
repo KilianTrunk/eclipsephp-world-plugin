@@ -26,7 +26,10 @@
 !/storage/logs/.gitkeep
 
 /storage/framework/cache/*
+!/storage/framework/cache/.gitkeep
+!/storage/framework/cache/data/.gitkeep
 /storage/framework/views/*
+!/storage/framework/views/.gitkeep
 
 /app/Policies/
 
