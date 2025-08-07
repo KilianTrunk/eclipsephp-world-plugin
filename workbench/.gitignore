@@ -16,7 +16,6 @@
 /packages/*/
 /vendor/
 
-# cache & logs: ignore everything except .gitkeep
 /bootstrap/cache/*
 !/bootstrap/cache/.gitkeep
 
@@ -28,24 +27,19 @@
 
 /storage/framework/cache/*
 !/storage/framework/cache/.gitkeep
+!/storage/framework/cache/data/.gitkeep
 /storage/framework/views/*
 !/storage/framework/views/.gitkeep
 /storage/framework/testing/*
 !/storage/framework/testing/.gitkeep
 
-# keep your app policies source in version control
-# (remove the old /app/Policies/ rule)
 /app/Policies/
 
-# other storage-related
 /storage/*.key
 /storage/pail
 
-# build artifacts
 /build
 
-# PHPUnit config
 /phpunit.xml
 
-# npm
 npm-debug.log
