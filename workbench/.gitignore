@@ -27,7 +27,11 @@
 !/storage/logs/.gitkeep
 
 /storage/framework/cache/*
+!/storage/framework/cache/.gitkeep
 /storage/framework/views/*
+!/storage/framework/views/.gitkeep
+/storage/framework/testing/*
+!/storage/framework/testing/.gitkeep
 
 # keep your app policies source in version control
 # (remove the old /app/Policies/ rule)
