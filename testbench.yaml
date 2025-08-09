@@ -4,6 +4,7 @@ providers:
   - Workbench\App\Providers\WorkbenchServiceProvider
 
 migrations:
+  - vendor/orchestra/testbench-core/laravel/migrations
   - workbench/database/migrations
 
 seeders:
@@ -24,6 +25,7 @@ workbench:
     - create-sqlite-db
     - db-wipe
     - migrate-fresh
+    - db-seed
   assets:
     - laravel-assets
   sync:
