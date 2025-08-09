@@ -28,7 +28,3 @@ workbench:
     - db-seed
   assets:
     - laravel-assets
-  sync:
-    - from: storage
-      to: workbench/storage
-      reverse: true
