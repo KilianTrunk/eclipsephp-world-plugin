@@ -15,9 +15,10 @@ class DatabaseSeeder extends Seeder
     {
         // UserFactory::new()->times(10)->create();
 
-        UserFactory::new()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // User is already created by Eclipse configuration
+        // UserFactory::new()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
     }
 }

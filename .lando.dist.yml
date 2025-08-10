@@ -2,7 +2,7 @@
 name: eclipse-world-plugin
 recipe: laravel
 config:
-  webroot: vendor/orchestra/testbench-core/laravel/public
+  webroot: workbench/public
   php: '8.3'
   via: nginx
 services:

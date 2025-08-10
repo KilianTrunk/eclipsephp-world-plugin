@@ -13,7 +13,7 @@ return [
          * `Spatie\Permission\Contracts\Permission` contract.
          */
 
-        'permission' => \Eclipse\Core\Models\User\Permission::class,
+        'permission' => Spatie\Permission\Models\Permission::class,
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -24,7 +24,7 @@ return [
          * `Spatie\Permission\Contracts\Role` contract.
          */
 
-        'role' => \Eclipse\Core\Models\User\Role::class,
+        'role' => Spatie\Permission\Models\Role::class,
 
     ],
 
@@ -93,7 +93,7 @@ return [
          * foreign key is other than `team_id`.
          */
 
-        'team_foreign_key' => 'site_id',
+        'team_foreign_key' => 'team_id',
     ],
 
     /*
@@ -131,7 +131,7 @@ return [
      * (view the latest version of this package's migration file)
      */
 
-    'teams' => true,
+    'teams' => false,
 
     /*
      * The class to use to resolve the permissions team id
@@ -172,7 +172,7 @@ return [
      * The class to use for interpreting wildcard permissions.
      * If you need to modify delimiters, override the class and specify its name here.
      */
-    // 'permission.wildcard_permission' => Spatie\Permission\WildcardPermission::class,
+    // 'wildcard_permission' => Spatie\Permission\WildcardPermission::class,
 
     /* Cache-specific settings */
 
