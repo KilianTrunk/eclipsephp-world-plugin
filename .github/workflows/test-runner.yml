@@ -21,7 +21,6 @@ jobs:
     runs-on: ubuntu-latest
     
     # Define the matrix of different PHP, Laravel, and testbench versions
-    # Upgraded to support Laravel 12 while maintaining Laravel 11 compatibility
     strategy:
       # Fail the whole workflow if one of the jobs fails
       fail-fast: true
