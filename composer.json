@@ -55,6 +55,7 @@
     },
     "scripts": {
         "post-autoload-dump": [
+            "@clear",
             "@prepare"
         ],
         "post-install-cmd": "@setup",
@@ -70,7 +71,6 @@
             "@php vendor/bin/testbench serve --ansi"
         ],
         "setup": [
-            "@clear",
             "npm install",
             "@php vendor/bin/testbench vendor:publish --provider='Spatie\\Permission\\PermissionServiceProvider'",
             "@php vendor/bin/testbench vendor:publish --tag='filament-shield-config'",
