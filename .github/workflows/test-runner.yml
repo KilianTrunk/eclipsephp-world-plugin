@@ -19,7 +19,7 @@ permissions:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
-    
+
     # Define the matrix of different PHP, Laravel, and testbench versions
     strategy:
       # Fail the whole workflow if one of the jobs fails
@@ -39,6 +39,11 @@ jobs:
     name: ${{ matrix.os }} / PHP ${{ matrix.php }} / L${{ matrix.laravel }} / ${{ matrix.dependency-version }}
 
     steps:
+
+      #- name: Configure operating system
+      #  if: matrix.os == 'ubuntu-latest'
+      #  run: sudo apt-get update && sudo apt-get install -y locales locales-all
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
