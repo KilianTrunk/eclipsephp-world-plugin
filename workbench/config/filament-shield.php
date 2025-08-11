@@ -17,7 +17,7 @@ return [
     'tenant_model' => null,
 
     'auth_provider_model' => [
-        'fqcn' => 'App\\Models\\User',
+        'fqcn' => 'Workbench\\App\\Models\\User',
     ],
 
     'super_admin' => [
@@ -60,7 +60,7 @@ return [
     ],
 
     'generator' => [
-        'option' => 'policies_and_permissions',
+        'option' => 'permissions',
         'policy_directory' => 'Policies',
         'policy_namespace' => 'Policies',
     ],
