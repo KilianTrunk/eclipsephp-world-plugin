@@ -19,30 +19,28 @@ permissions:
 jobs:
   test:
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     # Define the matrix of different PHP, Laravel, and testbench versions
     strategy:
       # Fail the whole workflow if one of the jobs fails
       fail-fast: true
       matrix:
-        os: [ ubuntu-latest ]
         php: [ 8.2, 8.3, 8.4 ]
-        laravel: [12.*, 11.*]
-        dependency-version: [ prefer-lowest, prefer-stable ]
+        laravel: [ 11.*, 12.* ]
+        dependency-version: [ prefer-stable ]
         include:
           # Laravel 12 uses Orchestra Testbench 10
           - laravel: 12.*
             testbench: 10.*
-          # Laravel 11 uses Orchestra Testbench 9  
+          # Laravel 11 uses Orchestra Testbench 9
           - laravel: 11.*
             testbench: 9.*
-    name: ${{ matrix.os }} / PHP ${{ matrix.php }} / L${{ matrix.laravel }} / ${{ matrix.dependency-version }}
+    name: PHP ${{ matrix.php }} / L${{ matrix.laravel }} / ${{ matrix.dependency-version }}
 
     steps:
 
       #- name: Configure operating system
-      #  if: matrix.os == 'ubuntu-latest'
       #  run: sudo apt-get update && sudo apt-get install -y locales locales-all
 
       - name: Checkout code
@@ -58,7 +56,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: vendor
-          key: ${{ runner.os }}-php-${{ matrix.php }}-laravel-${{ matrix.laravel }}-${{ matrix.dependency-version }}-${{ hashFiles('**/composer.lock') }}
+          key: php-${{ matrix.php }}-laravel-${{ matrix.laravel }}-${{ matrix.dependency-version }}-${{ hashFiles('**/composer.lock') }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -77,7 +75,7 @@ jobs:
 
       - name: Upload coverage reports to Codecov
         # Make sure the Codecov action is only executed once
-        if: matrix.os == 'ubuntu-latest' && matrix.php == '8.2' && matrix.laravel == '12.*' && matrix.dependency-version == 'prefer-stable'
+        if: matrix.php == '8.2' && matrix.laravel == '12.*' && matrix.dependency-version == 'prefer-stable'
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
