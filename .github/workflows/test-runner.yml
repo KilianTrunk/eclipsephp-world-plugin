@@ -17,31 +17,32 @@ permissions:
   contents: read
 
 jobs:
-  test:
-
-    runs-on: ${{ matrix.os }}
-
-    # Define the matrix of different PHP and dependency versions
+  run-tests:
+    runs-on: ubuntu-latest
+    
+    # Define the matrix of different PHP, Laravel, and testbench versions
+    # Upgraded to support Laravel 12 while maintaining Laravel 11 compatibility
     strategy:
       # Fail the whole workflow if one of the jobs fails
       fail-fast: true
       matrix:
-        os: [ ubuntu-latest ]
-        php: [ 8.2, 8.3, 8.4 ]
-        dependency-version: [ prefer-lowest, prefer-stable ]
-
-    name: ${{ matrix.os }} / PHP ${{ matrix.php }} / ${{ matrix.dependency-version }}
+        php: [8.4, 8.3, 8.2]
+        laravel: [12.*, 11.*]
+        dependency-version: [prefer-lowest, prefer-stable]
+        include:
+          # Laravel 12 uses Orchestra Testbench 10
+          - laravel: 12.*
+            testbench: 10.*
+          # Laravel 11 uses Orchestra Testbench 9  
+          - laravel: 11.*
+            testbench: 9.*
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }}
 
     steps:
-
-      #- name: Configure operating system
-      #  if: matrix.os == 'ubuntu-latest'
-      #  run: sudo apt-get update && sudo apt-get install -y locales locales-all
-
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
 
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
@@ -51,24 +52,26 @@ jobs:
         uses: actions/cache@v3
         with:
           path: vendor
-          key: ${{ runner.os }}-php-${{ matrix.php }}-${{ matrix.dependency-version }}-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-php-${{ matrix.php }}-laravel-${{ matrix.laravel }}-${{ matrix.dependency-version }}-${{ hashFiles('**/composer.lock') }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           coverage: xdebug
-          # extensions: mbstring, gd, intl
+          extensions: mbstring, pdo, pdo_sqlite
 
       - name: Install dependencies
-        run: composer update --prefer-dist --no-progress --${{ matrix.dependency-version }}
+        run: |
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" "filament/support" --no-interaction --no-update
+          composer update --${{ matrix.dependency-version }} --prefer-dist --no-progress --no-interaction
 
       - name: Run test suite
         run: composer test -- --coverage-clover ./coverage.xml
 
       - name: Upload coverage reports to Codecov
         # Make sure the Codecov action is only executed once
-        if: matrix.os == 'ubuntu-latest' && matrix.php == '8.2' && matrix.dependency-version == 'prefer-stable'
+        if: matrix.php == '8.2' && matrix.laravel == '12.*' && matrix.dependency-version == 'prefer-stable'
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
