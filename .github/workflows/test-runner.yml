@@ -18,16 +18,17 @@ permissions:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     
     # Define the matrix of different PHP, Laravel, and testbench versions
     strategy:
       # Fail the whole workflow if one of the jobs fails
       fail-fast: true
       matrix:
-        php: [8.4, 8.3, 8.2]
+        os: [ ubuntu-latest ]
+        php: [ 8.2, 8.3, 8.4 ]
         laravel: [12.*, 11.*]
-        dependency-version: [prefer-lowest, prefer-stable]
+        dependency-version: [ prefer-lowest, prefer-stable ]
         include:
           # Laravel 12 uses Orchestra Testbench 10
           - laravel: 12.*
@@ -35,7 +36,7 @@ jobs:
           # Laravel 11 uses Orchestra Testbench 9  
           - laravel: 11.*
             testbench: 9.*
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }}
+    name: ${{ matrix.os }} / PHP ${{ matrix.php }} / L${{ matrix.laravel }} / ${{ matrix.dependency-version }}
 
     steps:
       - name: Checkout code
@@ -58,7 +59,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           coverage: xdebug
-          extensions: mbstring, pdo, pdo_sqlite
+          # extensions: mbstring, gd, intl
 
       - name: Install dependencies
         run: |
@@ -70,7 +71,7 @@ jobs:
 
       - name: Upload coverage reports to Codecov
         # Make sure the Codecov action is only executed once
-        if: matrix.php == '8.2' && matrix.laravel == '12.*' && matrix.dependency-version == 'prefer-stable'
+        if: matrix.os == 'ubuntu-latest' && matrix.php == '8.2' && matrix.laravel == '12.*' && matrix.dependency-version == 'prefer-stable'
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
