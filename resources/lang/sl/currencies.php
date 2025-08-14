@@ -58,18 +58,18 @@ return [
     'import' => [
         'action_label' => 'Uvozi valute',
         'modal_heading' => 'Uvozi valute',
-        'success_title' => 'Uvozi valute',
-        'success_message' => 'Opravilo uvoza valut je bilo dodano v čakalno vrsto.',
+        'job_name' => 'Uvozi valute',
     ],
 
     'notifications' => [
-        'success' => [
+        'queued' => [
+            'title' => 'Uvoz valut je v čakalni vrsti',
+        ],
+        'completed' => [
             'title' => 'Uvoz valut je končan',
-            'message' => 'Vse valute so bile uspešno uvožene in posodobljene.',
         ],
         'failed' => [
             'title' => 'Uvoz valut ni uspel',
-            'message' => 'Uvoz podatkov o valutah ni uspel.',
         ],
     ],
 ];

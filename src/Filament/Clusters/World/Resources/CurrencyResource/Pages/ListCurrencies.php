@@ -6,9 +6,7 @@ use Eclipse\World\Filament\Clusters\World\Resources\CurrencyResource;
 use Eclipse\World\Jobs\ImportCurrencies;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
-use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
-use Illuminate\Support\Facades\App;
 
 class ListCurrencies extends ListRecords
 {
@@ -25,14 +23,7 @@ class ListCurrencies extends ListRecords
                 ->icon('heroicon-o-arrow-down-tray')
                 ->action(function () {
                     // Dispatch the job
-                    ImportCurrencies::dispatch(auth()->id(), App::getLocale());
-
-                    // Show notification
-                    Notification::make()
-                        ->title(__('eclipse-world::currencies.import.success_title'))
-                        ->body(__('eclipse-world::currencies.import.success_message'))
-                        ->success()
-                        ->send();
+                    ImportCurrencies::dispatch();
                 })
                 ->requiresConfirmation(),
         ];
