@@ -2,94 +2,65 @@
 
 namespace Eclipse\World\Jobs;
 
-use Eclipse\Core\Models\User;
+use Eclipse\Common\Foundation\Jobs\QueueableJob;
 use Eclipse\World\Models\Currency;
-use Eclipse\World\Notifications\ImportFinishedNotification;
 use Exception;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
-class ImportCurrencies implements ShouldQueue
+class ImportCurrencies extends QueueableJob
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
     public int $timeout = 60;
 
     public bool $failOnTimeout = true;
 
-    public ?int $userId;
-
-    public string $locale;
-
-    /**
-     * Create a new job instance.
-     */
-    public function __construct(?int $userId, string $locale = 'en')
+    protected function execute(): void
     {
-        $this->userId = $userId;
-        $this->locale = $locale;
-    }
+        // Load existing currencies into an associative array
+        $existingCurrencies = Currency::withTrashed()->get()->keyBy('id');
 
-    public function handle(): void
-    {
-        Log::info('Starting currencies import');
+        // Load new currency data from REST Countries API
+        $countries = json_decode(file_get_contents('https://raw.githubusercontent.com/mledoze/countries/master/dist/countries.json'), true);
 
-        $user = $this->userId ? User::find($this->userId) : null;
+        if (! $countries) {
+            throw new Exception('Failed to fetch or parse countries data');
+        }
 
-        try {
-            // Load existing currencies into an associative array
-            $existingCurrencies = Currency::withTrashed()->get()->keyBy('id');
+        $processedCurrencies = [];
 
-            // Load new currency data from REST Countries API
-            $countries = json_decode(file_get_contents('https://raw.githubusercontent.com/mledoze/countries/master/dist/countries.json'), true);
-
-            if (! $countries) {
-                throw new Exception('Failed to fetch or parse countries data');
+        foreach ($countries as $rawData) {
+            if (! $rawData['independent'] || empty($rawData['currencies'])) {
+                continue;
             }
 
-            $processedCurrencies = [];
-
-            foreach ($countries as $rawData) {
-                if (! $rawData['independent'] || empty($rawData['currencies'])) {
+            foreach ($rawData['currencies'] as $currencyCode => $currencyData) {
+                // Skip if we've already processed this currency
+                if (isset($processedCurrencies[$currencyCode])) {
                     continue;
                 }
 
-                foreach ($rawData['currencies'] as $currencyCode => $currencyData) {
-                    // Skip if we've already processed this currency
-                    if (isset($processedCurrencies[$currencyCode])) {
-                        continue;
-                    }
+                $data = [
+                    'id' => $currencyCode,
+                    'name' => $currencyData['name'],
+                    'is_active' => true,
+                ];
 
-                    $data = [
-                        'id' => $currencyCode,
-                        'name' => $currencyData['name'],
-                        'is_active' => true,
-                    ];
-
-                    if (isset($existingCurrencies[$currencyCode])) {
-                        $existingCurrencies[$currencyCode]->update($data);
-                    } else {
-                        Currency::create($data);
-                    }
-
-                    $processedCurrencies[$currencyCode] = true;
+                if (isset($existingCurrencies[$currencyCode])) {
+                    $existingCurrencies[$currencyCode]->update($data);
+                } else {
+                    Currency::create($data);
                 }
-            }
 
-            Log::info('Currencies import completed');
-            if ($user) {
-                $user->notify(new ImportFinishedNotification('success', 'currencies', null, $this->locale));
+                $processedCurrencies[$currencyCode] = true;
             }
-        } catch (Exception $e) {
-            Log::error('Currencies import failed: '.$e->getMessage());
-            if ($user) {
-                $user->notify(new ImportFinishedNotification('failed', 'currencies', null, $this->locale));
-            }
-            throw $e;
         }
+    }
+
+    protected function getJobName(): string
+    {
+        return __('eclipse-world::currencies.import.job_name', [], $this->locale);
+    }
+
+    protected function getNotificationTitle(): string
+    {
+        return __("eclipse-world::currencies.notifications.{$this->status->value}.title", [], $this->locale);
     }
 }

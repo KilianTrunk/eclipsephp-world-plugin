@@ -58,18 +58,18 @@ return [
     'import' => [
         'action_label' => 'Import Currencies',
         'modal_heading' => 'Import Currencies',
-        'success_title' => 'Import Currencies',
-        'success_message' => 'The import currencies job has been queued.',
+        'job_name' => 'Import Currencies',
     ],
 
     'notifications' => [
-        'success' => [
-            'title' => 'Currencies Import Completed',
-            'message' => 'All currencies have been successfully imported and updated.',
+        'queued' => [
+            'title' => 'Currencies Import queued',
+        ],
+        'completed' => [
+            'title' => 'Currencies Import completed',
         ],
         'failed' => [
-            'title' => 'Currencies Import Failed',
-            'message' => 'Failed to import currencies data.',
+            'title' => 'Currencies Import failed',
         ],
     ],
 ];
