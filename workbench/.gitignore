@@ -4,4 +4,4 @@ storage
 stubs/
 resources/views/vendor/
 lang/
-public/
+vendor
