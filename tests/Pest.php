@@ -16,9 +16,6 @@ use Tests\TestCase;
 
 uses(TestCase::class)
     ->beforeEach(function () {
-        // Run migrations to ensure all tables exist
-        Artisan::call('migrate:fresh');
-
         // Seed roles and permissions with Filament Shield plugin
         Artisan::call('shield:generate', [
             '--all' => null,

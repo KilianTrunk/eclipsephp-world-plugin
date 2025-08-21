@@ -23,6 +23,9 @@ abstract class TestCase extends BaseTestCase
         parent::setUp();
 
         $this->withoutVite();
+
+        // Ensure migrations are run
+        $this->artisan('migrate:fresh');
     }
 
     /**
