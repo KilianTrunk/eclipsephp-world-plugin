@@ -15,6 +15,7 @@ use Tests\TestCase;
 */
 
 uses(TestCase::class)
+    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->beforeEach(function () {
         // Seed roles and permissions with Filament Shield plugin
         Artisan::call('shield:generate', [
