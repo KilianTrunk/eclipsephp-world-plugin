@@ -1,6 +1,6 @@
 <?php
 
-namespace Eclipse\World\Seeders;
+namespace Eclipse\World\Database\Seeders;
 
 use Eclipse\World\Models\Currency;
 use Illuminate\Database\Seeder;
