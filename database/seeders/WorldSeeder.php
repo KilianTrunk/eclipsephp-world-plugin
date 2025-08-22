@@ -1,6 +1,6 @@
 <?php
 
-namespace Eclipse\World\Database\Seeders;
+namespace Eclipse\World\Seeders;
 
 use Illuminate\Database\Seeder;
 
