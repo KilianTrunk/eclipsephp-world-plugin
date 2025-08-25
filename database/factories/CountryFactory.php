@@ -22,8 +22,8 @@ class CountryFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => fake()->lexify('??'),
-            'a3_id' => fake()->lexify('???'),
+            'id' => strtoupper(fake()->lexify('??')),
+            'a3_id' => strtoupper(fake()->lexify('???')),
             'num_code' => str_pad(fake()->numberBetween(1, 999), 3, '0', STR_PAD_LEFT),
             'name' => fake()->country(),
             'flag' => fake()->emoji(),
