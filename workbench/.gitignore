@@ -5,11 +5,6 @@ storage/app/*
 !storage/app/public/
 storage/app/public/*
 !storage/app/public/.gitkeep
-storage/framework/cache/*
-!storage/framework/cache/.gitkeep
-!storage/framework/cache/data/
-storage/framework/cache/data/*
-!storage/framework/cache/data/.gitkeep
 storage/framework/sessions/*
 !storage/framework/sessions/.gitkeep
 storage/framework/testing/*
