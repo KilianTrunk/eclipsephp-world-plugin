@@ -5,6 +5,7 @@ config:
   webroot: workbench/public
   php: '8.3'
   via: nginx
+  database: mariadb:10.11
 services:
   appserver:
     type: php:custom
@@ -14,7 +15,7 @@ services:
       APP_BASE_PATH: "/app/workbench"
       TESTBENCH_WORKING_PATH: "/app"
     overrides:
-      image: slimdeluxe/php:8.3-v1.2
+      image: slimdeluxe/php:8.3-v1.3
       platform: linux/amd64
     run:
       - composer install --no-interaction --prefer-dist
