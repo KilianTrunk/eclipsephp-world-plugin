@@ -37,32 +37,34 @@ class AutoLogin
             $user = User::query()->first();
             Log::debug('[Workbench] AutoLogin user lookup', ['found' => (bool) $user]);
 
+            if (! $user) {
+                Log::warning('[Workbench] AutoLogin could not find any users to login — creating default admin user');
+                try {
+                    $user = User::query()->firstOrCreate(
+                        ['email' => 'test@example.com'],
+                        [
+                            'name' => 'Admin User',
+                            'password' => Hash::make('password'),
+                            'email_verified_at' => now(),
+                        ],
+                    );
+                } catch (\Throwable $e) {
+                    // In case of a race/unique constraint, fetch the existing one
+                    $user = User::query()->where('email', 'test@example.com')->first();
+                }
+                if ($user) {
+                    Log::info('[Workbench] AutoLogin ensured default user exists', ['user_id' => $user->id]);
+                }
+            }
+
             if ($user) {
                 $this->bootstrapPermissionsAndAssign($user);
                 Auth::guard('web')->login($user);
                 $request->session()->regenerate();
-                Log::info('[Workbench] AutoLogin successfully logged in first user', ['user_id' => $user->id]);
+                Log::info('[Workbench] AutoLogin successfully logged in user', ['user_id' => $user->id]);
 
-                // If we are on the login page, skip it after auto-login
                 if ($request->is('admin/login')) {
                     return redirect()->to('/admin');
-                }
-            } else {
-                Log::warning('[Workbench] AutoLogin could not find any users to login — creating default admin user');
-                $created = User::query()->create([
-                    'name' => 'Admin User',
-                    'email' => 'test@example.com',
-                    'password' => Hash::make('password'),
-                    'email_verified_at' => now(),
-                ]);
-                if ($created) {
-                    $this->bootstrapPermissionsAndAssign($created);
-                    Auth::guard('web')->login($created);
-                    $request->session()->regenerate();
-                    Log::info('[Workbench] AutoLogin created and logged in default user', ['user_id' => $created->id]);
-                    if ($request->is('admin/login')) {
-                        return redirect()->to('/admin');
-                    }
                 }
             }
         }
