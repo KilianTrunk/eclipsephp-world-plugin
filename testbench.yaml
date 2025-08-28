@@ -14,9 +14,6 @@ providers:
   - Workbench\App\Providers\WorkbenchServiceProvider
 
 migrations:
-  - vendor/orchestra/testbench-core/laravel/migrations
-  - vendor/orchestra/testbench-core/laravel/database/migrations
-  - vendor/spatie/laravel-permission/database/migrations
   - workbench/database/migrations
   - database/migrations
 
