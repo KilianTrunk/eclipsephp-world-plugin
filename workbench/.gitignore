@@ -24,3 +24,5 @@ lang/
 vendor
 public/build
 public/hot
+/public/css
+/public/js

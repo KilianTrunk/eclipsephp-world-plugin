@@ -76,6 +76,7 @@
             "npm install",
             "@php vendor/bin/testbench vendor:publish --provider='Spatie\\Permission\\PermissionServiceProvider'",
             "@php vendor/bin/testbench vendor:publish --tag='filament-shield-config'",
+            "@php vendor/bin/testbench filament:assets",
             "@php vendor/bin/testbench package:sync-skeleton"
         ]
     },
