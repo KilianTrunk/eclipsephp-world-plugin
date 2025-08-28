@@ -63,17 +63,15 @@ Should you want to contribute, please see the development guidelines in the [Dat
 
 This package ships with a minimal Testbench Workbench so you can run the Filament UI without a separate app:
 
-1. Start the container
+1. Clone the repository
+2. Start the container
    ```shell
    lando start
    ```
-2. Install PHP deps and build the workbench skeleton (runs migrations and seeds a test user)
-   ```shell
-   lando composer install
-   ```
-3. Open the admin panel at `https://eclipse-world-plugin.lndo.site/admin/login`
-   - User: `test@example.com`
-   - Password: `password`
+
+3. Open the admin panel at `https://eclipse-world-plugin.lndo.site/admin`
+
+**No login required** - you'll be automatically signed in as a test user with full permissions.
 
 Notes:
 - The container serves `workbench/public` as the webroot.
