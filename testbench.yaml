@@ -8,7 +8,7 @@ env:
   - APP_DEBUG=true
   - SESSION_DRIVER=database
   - CACHE_STORE=database
-  - QUEUE_CONNECTION=database
+  - QUEUE_CONNECTION=sync
 
 providers:
   - Workbench\App\Providers\WorkbenchServiceProvider

@@ -18,27 +18,10 @@ class AutoLogin
 {
     public function handle(Request $request, Closure $next)
     {
-        Log::debug('[Workbench] AutoLogin middleware triggered', [
-            'env' => config('app.env'),
-            'authenticated' => Auth::check(),
-            'guard' => config('auth.defaults.guard'),
-            'path' => $request->path(),
-        ]);
-
         if (config('app.env') === 'local' && ! Auth::guard('web')->check()) {
-            $dbPath = config('database.connections.sqlite.database');
-            $userCount = (int) DB::table('users')->count();
-            Log::debug('[Workbench] AutoLogin DB info', [
-                'sqlite_path' => $dbPath,
-                'sqlite_exists' => is_string($dbPath) ? file_exists($dbPath) : null,
-                'users_count' => $userCount,
-            ]);
-
             $user = User::query()->first();
-            Log::debug('[Workbench] AutoLogin user lookup', ['found' => (bool) $user]);
 
             if (! $user) {
-                Log::warning('[Workbench] AutoLogin could not find any users to login — creating default admin user');
                 try {
                     $user = User::query()->firstOrCreate(
                         ['email' => 'test@example.com'],
@@ -49,11 +32,9 @@ class AutoLogin
                         ],
                     );
                 } catch (\Throwable $e) {
+                    Log::error('[Workbench] AutoLogin user creation failed', ['message' => $e->getMessage()]);
                     // In case of a race/unique constraint, fetch the existing one
                     $user = User::query()->where('email', 'test@example.com')->first();
-                }
-                if ($user) {
-                    Log::info('[Workbench] AutoLogin ensured default user exists', ['user_id' => $user->id]);
                 }
             }
 
@@ -61,7 +42,6 @@ class AutoLogin
                 $this->bootstrapPermissionsAndAssign($user);
                 Auth::guard('web')->login($user);
                 $request->session()->regenerate();
-                Log::info('[Workbench] AutoLogin successfully logged in user', ['user_id' => $user->id]);
 
                 if ($request->is('admin/login')) {
                     return redirect()->to('/admin');
@@ -85,7 +65,6 @@ class AutoLogin
                     '--all' => true,
                     '--panel' => 'admin',
                 ]);
-                Log::info('[Workbench] Generated Shield permissions');
             }
 
             // Reset caches/registrar to ensure guards are picked up
