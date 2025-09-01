@@ -51,4 +51,18 @@ class TariffCode extends Model
     {
         return TariffCodeFactory::new();
     }
+
+    /**
+     * Boot the model.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($tariffCode) {
+            if (empty($tariffCode->year)) {
+                $tariffCode->year = (int) date('Y');
+            }
+        });
+    }
 }

@@ -43,7 +43,6 @@ return [
     ],
 
     'form' => [
-        'basic' => 'Osnovno',
         'year' => [
             'label' => 'Godina',
         ],
@@ -55,6 +54,12 @@ return [
         ],
         'measure_unit' => [
             'label' => 'Merna jedinica',
+        ],
+    ],
+
+    'validation' => [
+        'code' => [
+            'unique' => 'Carinska šifra s ovom šifrom već postoji.',
         ],
     ],
 

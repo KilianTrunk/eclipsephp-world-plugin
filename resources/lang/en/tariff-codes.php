@@ -43,7 +43,6 @@ return [
     ],
 
     'form' => [
-        'basic' => 'Basic',
         'year' => [
             'label' => 'Year',
         ],
@@ -55,6 +54,12 @@ return [
         ],
         'measure_unit' => [
             'label' => 'Measure unit',
+        ],
+    ],
+
+    'validation' => [
+        'code' => [
+            'unique' => 'A tariff code with this code already exists.',
         ],
     ],
 

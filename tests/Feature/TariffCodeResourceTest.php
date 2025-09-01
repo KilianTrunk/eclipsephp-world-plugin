@@ -74,7 +74,6 @@ test('form validation works', function () {
 
     // Test with valid data
     $validData = [
-        'year' => (int) date('Y'),
         'code' => '0101',
         'name' => ['en' => 'Live horses, asses, mules and hinnies'],
         'measure_unit' => ['en' => 'pcs'],
@@ -86,7 +85,6 @@ test('form validation works', function () {
 
 test('new tariff code can be created', function () {
     $data = [
-        'year' => (int) date('Y'),
         'code' => '0101',
         'name' => ['en' => 'Live horses, asses, mules and hinnies'],
         'measure_unit' => ['en' => 'pcs'],
@@ -97,12 +95,11 @@ test('new tariff code can be created', function () {
         ->assertHasNoActionErrors();
 
     $tariffCode = TariffCode::where('code', $data['code'])
-        ->where('year', $data['year'])
         ->first();
 
     expect($tariffCode)->toBeObject();
 
-    expect($tariffCode->year)->toEqual($data['year']);
+    expect($tariffCode->year)->toEqual((int) date('Y'));
     expect($tariffCode->code)->toEqual($data['code']);
     expect($tariffCode->name)->toEqual($data['name']);
     expect($tariffCode->measure_unit)->toEqual($data['measure_unit']);
@@ -110,7 +107,6 @@ test('new tariff code can be created', function () {
 
 test('existing tariff code can be updated', function () {
     $tariffCode = TariffCode::factory()->create([
-        'year' => (int) date('Y'),
         'code' => '0101',
         'name' => ['en' => 'Live horses, asses, mules and hinnies'],
         'measure_unit' => ['en' => 'pcs'],
@@ -172,14 +168,12 @@ test('cannot create duplicate year-code combo', function () {
 
     // Create first tariff code
     $firstTariffCode = TariffCode::factory()->create([
-        'year' => $year,
         'code' => '0101',
         'name' => ['en' => 'Live horses'],
     ]);
 
     // Try to create duplicate year-code combination
     $duplicateData = [
-        'year' => $year,
         'code' => '0101',
         'name' => ['en' => 'Different name'],
     ];
@@ -197,50 +191,16 @@ test('cannot create duplicate year-code combo', function () {
         ->toBe(1);
 });
 
-test('can create same code for different years', function () {
-    $year1 = (int) date('Y');
-    $year2 = $year1 - 1;
-
-    // Create tariff code with same code for first year
-    $tariffCode1Data = [
-        'year' => $year1,
-        'code' => '0101',
-        'name' => ['en' => 'Live horses'],
-    ];
-
-    livewire(ListTariffCodes::class)
-        ->callAction('create', $tariffCode1Data)
-        ->assertHasNoActionErrors();
-
-    // Create tariff code with same code for second year (should work)
-    $tariffCode2Data = [
-        'year' => $year2,
-        'code' => '0101',
-        'name' => ['en' => 'Live horses old'],
-    ];
-
-    livewire(ListTariffCodes::class)
-        ->callAction('create', $tariffCode2Data)
-        ->assertHasNoActionErrors();
-
-    // Verify both tariff codes exist
-    expect(TariffCode::where('code', '0101')->count())->toBe(2);
-    expect(TariffCode::where('year', $year1)->where('code', '0101')->count())->toBe(1);
-    expect(TariffCode::where('year', $year2)->where('code', '0101')->count())->toBe(1);
-});
-
 test('updating tariff code respects unique constraint', function () {
     $year = (int) date('Y');
 
     // Create two tariff codes
     $tariffCode1 = TariffCode::factory()->create([
-        'year' => $year,
         'code' => '0101',
         'name' => ['en' => 'Live horses'],
     ]);
 
     $tariffCode2 = TariffCode::factory()->create([
-        'year' => $year,
         'code' => '0102',
         'name' => ['en' => 'Live cattle'],
     ]);
@@ -256,7 +216,6 @@ test('can update tariff code with same code (no change)', function () {
     $year = (int) date('Y');
 
     $tariffCode = TariffCode::factory()->create([
-        'year' => $year,
         'code' => '0101',
         'name' => ['en' => 'Live horses'],
     ]);

@@ -5,7 +5,6 @@ namespace Eclipse\World\Filament\Clusters\World\Resources;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Eclipse\World\Filament\Clusters\World;
 use Eclipse\World\Models\TariffCode;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Concerns\Translatable;
@@ -40,24 +39,27 @@ class TariffCodeResource extends Resource implements HasShieldPermissions
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Section::make(__('eclipse-world::tariff-codes.form.basic', [], app()->getLocale()) ?: 'Basic')
-                ->compact()
-                ->schema([
-                    TextInput::make('year')
-                        ->numeric()
-                        ->required()
-                        ->default((int) date('Y')),
-                    TextInput::make('code')
-                        ->maxLength(20)
-                        ->required(),
-                    TextInput::make('name')
-                        ->label(__('eclipse-world::tariff-codes.form.name.label'))
-                        ->required(),
-                    TextInput::make('measure_unit')
-                        ->label(__('eclipse-world::tariff-codes.form.measure_unit.label'))
-                        ->nullable(),
-                ])->columns(2),
-        ]);
+            TextInput::make('code')
+                ->maxLength(20)
+                ->required()
+                ->unique(
+                    table: 'world_tariff_codes',
+                    column: 'code',
+                    ignoreRecord: true,
+                    modifyRuleUsing: function ($rule) {
+                        return $rule->where('year', (int) date('Y'));
+                    }
+                )
+                ->validationMessages([
+                    'unique' => __('eclipse-world::tariff-codes.validation.code.unique'),
+                ]),
+            TextInput::make('name')
+                ->label(__('eclipse-world::tariff-codes.form.name.label'))
+                ->required(),
+            TextInput::make('measure_unit')
+                ->label(__('eclipse-world::tariff-codes.form.measure_unit.label'))
+                ->nullable(),
+        ])->columns(2);
     }
 
     public static function table(Table $table): Table
@@ -67,7 +69,6 @@ class TariffCodeResource extends Resource implements HasShieldPermissions
             ->defaultSort('code')
             ->striped()
             ->columns([
-                TextColumn::make('year')->label(__('eclipse-world::tariff-codes.table.year.label'))->sortable()->width(90),
                 TextColumn::make('code')->label(__('eclipse-world::tariff-codes.table.code.label'))->searchable()->sortable()->width(160),
                 TextColumn::make('name')
                     ->label(__('eclipse-world::tariff-codes.table.name.label'))

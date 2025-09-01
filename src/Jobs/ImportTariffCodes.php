@@ -98,6 +98,30 @@ class ImportTariffCodes extends QueueableJob
 
         $multiReader = $this->csv($multiPath);
 
+        $codeNamesLookup = [];
+        foreach ($multiReader->getRecords() as $row) {
+            $raw = isset($row['CN_CODE']) ? trim((string) $row['CN_CODE']) : null;
+            $code = $raw !== null ? $this->normalizeCode($raw) : null;
+            if ($code === null || $code === '') {
+                continue;
+            }
+
+            foreach ($this->locales as $locale) {
+                $col = 'NAME_'.strtoupper($locale);
+                if (array_key_exists($col, $row)) {
+                    $val = trim((string) $row[$col]);
+                    if ($val !== '') {
+                        if (! isset($codeNamesLookup[$locale])) {
+                            $codeNamesLookup[$locale] = [];
+                        }
+                        $codeNamesLookup[$locale][$code] = $val;
+                    }
+                }
+            }
+        }
+
+        $multiReader = $this->csv($multiPath);
+
         $chunk = [];
         $chunkSize = 200;
         $codesInChunk = [];
@@ -123,7 +147,7 @@ class ImportTariffCodes extends QueueableJob
                 if (array_key_exists($col, $row)) {
                     $val = trim((string) $row[$col]);
                     if ($val !== '') {
-                        $chunk[$code]['name'][$locale] = $val;
+                        $chunk[$code]['name'][$locale] = $this->transformCnName($val, $code, $codeNamesLookup[$locale] ?? []);
                     }
                 }
             }
@@ -276,5 +300,40 @@ class ImportTariffCodes extends QueueableJob
     private function normalizeCode(string $code): string
     {
         return str_replace(' ', '', $code);
+    }
+
+    /**
+     * Transform CN name by removing leading dashes and building hierarchical name.
+     */
+    private function transformCnName(string $name, string $code, array $codeNamesLookup): string
+    {
+        $name = ltrim($name, '-');
+
+        if (empty($name)) {
+            return $code;
+        }
+
+        $hierarchicalParts = [];
+
+        $hierarchicalParts[] = ucfirst($name);
+
+        $currentCode = $code;
+        while (strlen($currentCode) > 2) {
+            $parentCode = substr($currentCode, 0, -2);
+            if (strlen($parentCode) >= 2) {
+                $parentName = $codeNamesLookup[$parentCode] ?? null;
+                if ($parentName) {
+                    $cleanParentName = ltrim($parentName, '-');
+                    if (! empty($cleanParentName)) {
+                        $hierarchicalParts[] = ucfirst($cleanParentName);
+                    }
+                }
+            }
+            $currentCode = $parentCode;
+        }
+
+        $hierarchicalParts = array_reverse($hierarchicalParts);
+
+        return implode(' > ', $hierarchicalParts);
     }
 }

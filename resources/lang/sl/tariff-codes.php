@@ -43,7 +43,6 @@ return [
     ],
 
     'form' => [
-        'basic' => 'Osnovno',
         'year' => [
             'label' => 'Leto',
         ],
@@ -55,6 +54,12 @@ return [
         ],
         'measure_unit' => [
             'label' => 'Merska enota',
+        ],
+    ],
+
+    'validation' => [
+        'code' => [
+            'unique' => 'Carinska oznaka s to kodo že obstaja.',
         ],
     ],
 
