@@ -208,10 +208,30 @@ class ImportTariffCodes extends QueueableJob
             return;
         }
 
+        $codes = array_keys($chunk);
+        $existingRecords = DB::table('world_tariff_codes')
+            ->where('year', $chunk[reset($codes)]['year'])
+            ->whereIn('code', $codes)
+            ->get(['code', 'name', 'measure_unit'])
+            ->keyBy('code');
+
         $payload = [];
         foreach ($chunk as $rec) {
-            $names = array_intersect_key($rec['name'], array_flip($this->locales));
-            $units = array_intersect_key($rec['measure_unit'], array_flip($this->locales));
+            $existingName = [];
+            $existingUnits = [];
+            
+            if (isset($existingRecords[$rec['code']])) {
+                $existing = $existingRecords[$rec['code']];
+                if ($existing->name) {
+                    $existingName = json_decode($existing->name, true) ?? [];
+                }
+                if ($existing->measure_unit) {
+                    $existingUnits = json_decode($existing->measure_unit, true) ?? [];
+                }
+            }
+
+            $names = array_merge($existingName, $rec['name']);
+            $units = array_merge($existingUnits, $rec['measure_unit']);
 
             $payload[] = [
                 'year' => $rec['year'],
@@ -315,17 +335,17 @@ class ImportTariffCodes extends QueueableJob
 
         $hierarchicalParts = [];
 
-        $hierarchicalParts[] = ucfirst($name);
+        $hierarchicalParts[] = strtoupper($name);
 
         $currentCode = $code;
         while (strlen($currentCode) > 2) {
             $parentCode = substr($currentCode, 0, -2);
-            if (strlen($parentCode) >= 2) {
+            if (strlen($parentCode) > 2) {
                 $parentName = $codeNamesLookup[$parentCode] ?? null;
                 if ($parentName) {
                     $cleanParentName = ltrim($parentName, '-');
                     if (! empty($cleanParentName)) {
-                        $hierarchicalParts[] = ucfirst($cleanParentName);
+                        $hierarchicalParts[] = strtoupper($cleanParentName);
                     }
                 }
             }
