@@ -219,7 +219,7 @@ class ImportTariffCodes extends QueueableJob
         foreach ($chunk as $rec) {
             $existingName = [];
             $existingUnits = [];
-            
+
             if (isset($existingRecords[$rec['code']])) {
                 $existing = $existingRecords[$rec['code']];
                 if ($existing->name) {
